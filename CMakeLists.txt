@@ -65,13 +65,15 @@ endif()
 # find package and check third party
 # - json
 # - spdlog
+# - google glog (optional)
 
 # json
-if (NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/json/include")
+if (NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/json/CMakeLists.txt")
     message(FATAL_ERROR "json was not found!"
         "Please execute the command \"git submodule update --init --recursive\"")
 endif()
-set(JSON_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/third_party/json/include)
+set(JSON_BuildTests OFF CACHE INTERNAL "")
+add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/json)
 
 # spdlog
 if (NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/spdlog/include")
@@ -79,6 +81,17 @@ if (NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/spdlog/include")
         "Please execute the command \"git submodule update --init --recursive\"")
 endif()
 set(SPDLOG_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/third_party/spdlog/include)
+
+set(USE_STACK_TRACE_LOGGER OFF CACHE BOOL "Enable automatic stack trace logger of google-glog")
+if(USE_STACK_TRACE_LOGGER)
+    message(STATUS "Stack trace logger: ENABLED")
+    # Glog
+    find_package(Glog REQUIRED)
+    # include directories is ${GLOG_INCLUDE_DIR}
+else()
+    message(STATUS "Stack trace logger: DISABLED")
+endif()
+
 
 # build selection
 add_subdirectory(cli)
