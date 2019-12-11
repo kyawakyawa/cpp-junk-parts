@@ -3,6 +3,10 @@ add_executable(load_messagepack load_messagepack.cc)
 target_link_libraries(load_messagepack PRIVATE nlohmann_json::nlohmann_json)
 list(APPEND EXECUTABLE_TARGETS load_messagepack)
 
+add_executable(pcg32-test ./pcg32-test.cc)
+target_include_directories(pcg32-test SYSTEM PRIVATE ${PCG_CPP_INCLUDE_DIR})
+list(APPEND EXECUTABLE_TARGETS pcg32-test)
+
 foreach(EXECUTABLE_TARGET IN LISTS EXECUTABLE_TARGETS)
     target_compile_features(${EXECUTABLE_TARGET} PRIVATE cxx_std_17)
     target_compile_options(${EXECUTABLE_TARGET}

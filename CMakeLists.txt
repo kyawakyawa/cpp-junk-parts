@@ -65,6 +65,7 @@ endif()
 # find package and check third party
 # - json
 # - spdlog
+# - pcg-cpp
 # - google glog (optional)
 
 # json
@@ -92,6 +93,12 @@ else()
     message(STATUS "Stack trace logger: DISABLED")
 endif()
 
+# pcg-cpp
+if (NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/pcg-cpp/include")
+  message(FATAL_ERROR "pcg-cpp was not found!"
+      "Please execute the command \"git submodule update --init --recursive\"")
+endif()
+set(PCG_CPP_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/third_party/pcg-cpp/include)
 
 # build selection
 add_subdirectory(cli)
