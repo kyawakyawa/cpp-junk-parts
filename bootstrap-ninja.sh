@@ -7,9 +7,8 @@ CC=clang CXX=clang++ cmake -Bcmake-build-debug -H. \
                            -DCMAKE_BUILD_TYPE=Debug \
                            -DUSE_CCACHE=ON \
                            -DUSE_SANITIZER=OFF \
-                           -DUSE_STACK_TRACE_LOGGER=ON \
+                           -DUSE_STACK_TRACE_LOGGER=OFF \
                            -DBUILD_WITH_MARCH_NATIVE=ON \
-                           -GNinja \
-                           ..
+                           -GNinja
 
 mv cmake-build-debug/compile_commands.json .

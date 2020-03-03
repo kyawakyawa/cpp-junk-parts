@@ -7,7 +7,19 @@ add_executable(pcg32-test ./pcg32-test.cc)
 target_include_directories(pcg32-test SYSTEM PRIVATE ${PCG_CPP_INCLUDE_DIR})
 list(APPEND EXECUTABLE_TARGETS pcg32-test)
 
+add_executable(glfw-texture ./glfw-texture.cc)
+target_link_libraries(glfw-texture PRIVATE GL GLEW glfw)
+list(APPEND EXECUTABLE_TARGETS glfw-texture)
+
+add_executable(glfw-shader ./glfw-shader.cc)
+target_link_libraries(glfw-shader PRIVATE GL GLEW glfw)
+list(APPEND EXECUTABLE_TARGETS glfw-shader)
+
 foreach(EXECUTABLE_TARGET IN LISTS EXECUTABLE_TARGETS)
+    # set output directory for executables
+    set_target_properties(${EXECUTABLE_TARGET} PROPERTIES
+      RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+
     target_compile_features(${EXECUTABLE_TARGET} PRIVATE cxx_std_17)
     target_compile_options(${EXECUTABLE_TARGET}
             PRIVATE
