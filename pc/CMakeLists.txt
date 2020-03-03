@@ -5,6 +5,7 @@ list(APPEND EXECUTABLE_TARGETS load_messagepack)
 
 add_executable(pcg32-test ./pcg32-test.cc)
 target_include_directories(pcg32-test SYSTEM PRIVATE ${PCG_CPP_INCLUDE_DIR})
+target_compile_options(pcg32-test PRIVATE -Wno-date-time)
 list(APPEND EXECUTABLE_TARGETS pcg32-test)
 
 add_executable(glfw-texture ./glfw-texture.cc)
