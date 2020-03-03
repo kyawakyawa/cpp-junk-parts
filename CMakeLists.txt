@@ -101,7 +101,7 @@ endif()
 set(PCG_CPP_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/third_party/pcg-cpp/include)
 
 # build selection
-add_subdirectory(cli)
+add_subdirectory(pc)
 
 #message(STATUS "*** dump start cmake variables ***")
 #get_cmake_property(_variableNames VARIABLES)
