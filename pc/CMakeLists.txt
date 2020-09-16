@@ -16,6 +16,10 @@ add_executable(glfw-shader ./glfw-shader.cc)
 target_link_libraries(glfw-shader PRIVATE GL GLEW glfw)
 list(APPEND EXECUTABLE_TARGETS glfw-shader)
 
+add_executable(staticjson-example ./staticjson-example.cc)
+target_link_libraries(staticjson-example PRIVATE staticjson)
+list(APPEND EXECUTABLE_TARGETS staticjson-example)
+
 foreach(EXECUTABLE_TARGET IN LISTS EXECUTABLE_TARGETS)
     # set output directory for executables
     set_target_properties(${EXECUTABLE_TARGET} PROPERTIES

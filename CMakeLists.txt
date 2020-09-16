@@ -64,6 +64,7 @@ endif()
 
 # find package and check third party
 # - json
+# - StaticJSON + rapidjson
 # - spdlog
 # - pcg-cpp
 # - google glog (optional)
@@ -75,6 +76,33 @@ if (NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/json/CMakeLists.txt")
 endif()
 set(JSON_BuildTests OFF CACHE INTERNAL "")
 add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/json)
+
+# Static JSON + rapidjson
+
+set (POSSIBLE_RAPIDJSON_DIR "${PROJECT_SOURCE_DIR}/third_party/rapidjson/include")
+find_path(RAPIDJSON_INCLUDE_DIR rapidjson/rapidjson.h PATHS ${POSSIBLE_RAPIDJSON_DIR})
+if (NOT RAPIDJSON_INCLUDE_DIR)
+    message("Rapid JSON was not found")
+endif()
+
+if (NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/StaticJSON/src/staticjson.cpp")
+    message(FATAL_ERROR "StaticJson was not found!"
+        "Please execute the command \"git submodule update --init --recursive\"")
+endif()
+
+set(STATICJSON_SOURCE_FILES "${PROJECT_SOURCE_DIR}/third_party/StaticJSON/src/staticjson.cpp")
+add_library(staticjson SHARED ${STATICJSON_SOURCE_FILES})
+
+target_include_directories(staticjson PUBLIC SYSTEM ${RAPIDJSON_INCLUDE_DIR})
+target_include_directories(staticjson PUBLIC ${PROJECT_SOURCE_DIR}/third_party/StaticJSON/include)
+
+target_compile_options(staticjson PRIVATE
+          $<$<CXX_COMPILER_ID:Clang>:  -Wall -Wextra -pedantic -g>
+          $<$<CXX_COMPILER_ID:GCC>:    -Wall -Wextra -pedantic -g>
+          $<$<CXX_COMPILER_ID:MSVC>:>)
+ 
+target_compile_features(staticjson
+                        PRIVATE cxx_std_11)   
 
 # spdlog
 if (NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/spdlog/include")
