@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(raytrace_kernel_module LANGUAGES CXX C)
+project(cpp-junk-parts LANGUAGES CXX C)
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
