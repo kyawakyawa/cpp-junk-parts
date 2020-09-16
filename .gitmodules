@@ -10,3 +10,6 @@
 [submodule "third_party/StaticJSON"]
 	path = third_party/StaticJSON
 	url = git@github.com:netheril96/StaticJSON.git
+[submodule "third_party/rapidjson"]
+	path = third_party/rapidjson
+	url = https://github.com/Tencent/rapidjson.git
