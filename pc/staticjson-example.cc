@@ -55,12 +55,25 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   google::InitGoogleLogging(argv[0]);
   google::InstallFailureSignalHandler();
 #endif
-  if (argc < 2) {
-    spdlog::error("Please specify input json file");
-    return EXIT_FAILURE;
-  }
-
   std::map<std::string, A> m;
+
+  if (argc < 2) {
+    std::string str =
+        "{ \"aaa\": { \"hoge\" : 1,\"str\"  : \"yes\" }, \"bbb\": { \"hoge\" : "
+        "0, \"str\" : \"no\" } }";
+
+    staticjson::ParseStatus res;
+    if (!staticjson::from_json_string(str.c_str(), &m, &res)) {
+      spdlog::error("failed to load json file");
+      return EXIT_FAILURE;
+    }
+
+    for (const auto &v : m) {
+      spdlog::info("{}:\n\t{}\t{}", v.first, v.second.hoge, v.second.str);
+    }
+
+    return EXIT_SUCCESS;
+  }
 
   printf("%s\n", argv[1]);
 
