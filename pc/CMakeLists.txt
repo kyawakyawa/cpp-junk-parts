@@ -20,6 +20,10 @@ add_executable(staticjson-example ./staticjson-example.cc)
 target_link_libraries(staticjson-example PRIVATE staticjson)
 list(APPEND EXECUTABLE_TARGETS staticjson-example)
 
+add_executable(quick-select ./quick-select.cc)
+target_compile_definitions(quick-select PRIVATE  _LIBCPP_DEBUG _GLIBCXX_DEBUG)
+list(APPEND EXECUTABLE_TARGETS quick-select)
+
 foreach(EXECUTABLE_TARGET IN LISTS EXECUTABLE_TARGETS)
     # set output directory for executables
     set_target_properties(${EXECUTABLE_TARGET} PROPERTIES
