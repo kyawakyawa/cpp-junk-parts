@@ -53,6 +53,7 @@ MedianWithQuickSelect(const std::vector<int> &input,
     if (sm == Randomized) {
       pivot_id = size_t(l + (rand() % (r - l)));
     }
+    // TODO 中央値の中央値を実装する // http://www.flint.jp/blog/?entry=109
 
     // ピボットを先頭に退避
     const int pivot = v[pivot_id];
@@ -79,6 +80,14 @@ MedianWithQuickSelect(const std::vector<int> &input,
   return ret;
 }
 
+static int NthElement(const std::vector<int> &input) {
+  auto v = input;
+  const size_t n = v.size();
+  const size_t m_id = (n - 1) / 2;
+  std::nth_element(v.begin(), v.begin() + long(m_id), v.end());
+  return v[m_id];
+}
+
 static void Test(const size_t n, const bool output = true) {
   const auto a = GenerateRandomVector(n);
   if (output) {
@@ -90,12 +99,14 @@ static void Test(const size_t n, const bool output = true) {
 
     std::cout << "quicksort  : " << MedianWithSort(a) << std::endl;
     std::cout << "quickselct : " << MedianWithQuickSelect(a) << std::endl;
+    std::cout << "nth_element : " << NthElement(a) << std::endl;
   }
 
   int s = MedianWithSort(a);
   int q = MedianWithQuickSelect(a);
+  int nth = MedianWithQuickSelect(a);
 
-  if (s != q) {
+  if (s != q || q != nth || s != nth) {
     std::runtime_error("error is occured");
   }
 }
