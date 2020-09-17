@@ -24,7 +24,7 @@ static std::vector<int> GenerateRandomVector(const size_t n) {
 }
 
 // get floor((n - 1) / 2)th element
-//  TODO 0の時
+//  TODO 長さ0の時
 static int MedianWithSort(const std::vector<int> &input) {
   const size_t n = input.size();
   auto v = input;
@@ -34,7 +34,7 @@ static int MedianWithSort(const std::vector<int> &input) {
 
 enum SelectionMethod { MedianOfMedian, Randomized };
 
-//  TODO 0の時
+//  TODO 長さ0の時
 static int
 MedianWithQuickSelect(const std::vector<int> &input,
                       SelectionMethod sm = SelectionMethod::Randomized) {
@@ -48,12 +48,13 @@ MedianWithQuickSelect(const std::vector<int> &input,
   // [l, r)
 
   int ret = 0;
-  while (true) {
+  while (r - l > 0) {
     size_t pivot_id = 0;
     if (sm == Randomized) {
       pivot_id = size_t(l + (rand() % (r - l)));
     }
 
+    // ピボットを先頭に退避
     const int pivot = v[pivot_id];
     std::swap(v[size_t(l)], v[pivot_id]);
 
@@ -63,6 +64,7 @@ MedianWithQuickSelect(const std::vector<int> &input,
          v.begin()) -
         1;
 
+    // ピボットが後半グループの先頭になるようにする
     std::swap(v[size_t(l)], v[size_t(c)]);
 
     if (size_t(c) == m_id) {
@@ -90,7 +92,10 @@ static void Test(const size_t n, const bool output = true) {
     std::cout << "quickselct : " << MedianWithQuickSelect(a) << std::endl;
   }
 
-  if (MedianWithSort(a) != MedianWithQuickSelect(a)) {
+  int s = MedianWithSort(a);
+  int q = MedianWithQuickSelect(a);
+
+  if (s != q) {
     std::runtime_error("error is occured");
   }
 }
@@ -116,9 +121,12 @@ int main(int argc, char **argv) {
   std::default_random_engine engine(seed_gen());
 
   std::uniform_int_distribution<> dist(1, 5000);
-  it = 10000;
+  it = 100000;
 
   for (size_t i = 0; i < it; ++i) {
+    if (i % std::max<size_t>(1, it / 100) == 0)
+      std::cout << 100. * i / it << "%" << std::endl;
+    n = size_t(dist(engine));
     Test(n, false);
   }
   std::cout << "pass all tests" << std::endl;
