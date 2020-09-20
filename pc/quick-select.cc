@@ -1,9 +1,10 @@
-#include <algorithm>
 #include <assert.h>
+#include <stdlib.h>
+
+#include <algorithm>
 #include <iostream>
 #include <random>
 #include <stdexcept>
-#include <stdlib.h>
 #include <vector>
 
 #ifdef USE_STACK_TRACE_LOGGER
@@ -27,7 +28,7 @@ static std::vector<int> GenerateRandomVector(const size_t n) {
 //  TODO 長さ0の時
 static int MedianWithSort(const std::vector<int> &input) {
   const size_t n = input.size();
-  auto v = input;
+  auto v         = input;
   std::sort(v.begin(), v.end());
   return v[(n - 1) / 2];
 }
@@ -35,11 +36,11 @@ static int MedianWithSort(const std::vector<int> &input) {
 enum SelectionMethod { MedianOfMedian, Randomized };
 
 //  TODO 長さ0の時
-static int
-MedianWithQuickSelect(const std::vector<int> &input,
-                      SelectionMethod sm = SelectionMethod::Randomized) {
+static int MedianWithQuickSelect(
+    const std::vector<int> &input,
+    SelectionMethod sm = SelectionMethod::Randomized) {
   const size_t n = input.size();
-  auto v = input;
+  auto v         = input;
 
   const size_t m_id = (n - 1) / 2;
 
@@ -81,8 +82,8 @@ MedianWithQuickSelect(const std::vector<int> &input,
 }
 
 static int NthElement(const std::vector<int> &input) {
-  auto v = input;
-  const size_t n = v.size();
+  auto v            = input;
+  const size_t n    = v.size();
   const size_t m_id = (n - 1) / 2;
   std::nth_element(v.begin(), v.begin() + long(m_id), v.end());
   return v[m_id];
@@ -102,8 +103,8 @@ static void Test(const size_t n, const bool output = true) {
     std::cout << "nth_element : " << NthElement(a) << std::endl;
   }
 
-  int s = MedianWithSort(a);
-  int q = MedianWithQuickSelect(a);
+  int s   = MedianWithSort(a);
+  int q   = MedianWithQuickSelect(a);
   int nth = MedianWithQuickSelect(a);
 
   if (s != q || q != nth || s != nth) {
@@ -120,7 +121,7 @@ int main(int argc, char **argv) {
   (void)argc;
   (void)argv;
 #endif
-  size_t n = 10;
+  size_t n  = 10;
   size_t it = 10;
 
   for (size_t i = 0; i < it; ++i) {
@@ -136,7 +137,7 @@ int main(int argc, char **argv) {
 
   for (size_t i = 0; i < it; ++i) {
     if (i % std::max<size_t>(1, it / 100) == 0)
-      std::cout << 100. * i / it << "%" << std::endl;
+      std::cout << 100. * double(i) / double(it) << "%" << std::endl;
     n = size_t(dist(engine));
     Test(n, false);
   }

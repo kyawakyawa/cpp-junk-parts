@@ -1,5 +1,5 @@
-#include <iostream>
 #include <fstream>
+#include <iostream>
 
 #ifdef USE_STACK_TRACE_LOGGER
 #include <glog/logging.h>
@@ -7,10 +7,10 @@
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
+#include <spdlog/spdlog.h>
+
 #include <nlohmann/json.hpp>
 #pragma clang diagnostic pop
-
-#include <spdlog/spdlog.h>
 
 namespace kyawakyawa {
 static std::vector<uint8_t> load_msgpack(const std::string& filename) {

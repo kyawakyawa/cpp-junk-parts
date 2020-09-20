@@ -41,7 +41,7 @@ static void ShowRandom(void) {
   for (size_t i = 0; i < 50; i++) {
     // uint32_t a = rng();
     const uint32_t a = Pcg32();
-    std::cout << float(a) / UINT32_MAX << std::endl;
+    std::cout << float(a) / float(UINT32_MAX) << std::endl;
   }
 }
 }  // namespace kyawakyawa

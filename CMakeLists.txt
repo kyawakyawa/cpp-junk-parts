@@ -105,11 +105,7 @@ target_compile_features(staticjson
                         PRIVATE cxx_std_11)   
 
 # spdlog
-if (NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/spdlog/include")
-    message(FATAL_ERROR "spdlog was not found!"
-        "Please execute the command \"git submodule update --init --recursive\"")
-endif()
-set(SPDLOG_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/third_party/spdlog/include)
+add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/spdlog)
 
 set(USE_STACK_TRACE_LOGGER OFF CACHE BOOL "Enable automatic stack trace logger of google-glog")
 if(USE_STACK_TRACE_LOGGER)
