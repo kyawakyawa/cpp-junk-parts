@@ -107,6 +107,7 @@ target_compile_features(staticjson
 # spdlog
 add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/spdlog)
 
+# google glog
 set(USE_STACK_TRACE_LOGGER OFF CACHE BOOL "Enable automatic stack trace logger of google-glog")
 if(USE_STACK_TRACE_LOGGER)
     message(STATUS "Stack trace logger: ENABLED")
