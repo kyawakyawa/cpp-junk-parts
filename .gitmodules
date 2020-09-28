@@ -17,3 +17,7 @@
 	path = third_party/rapidjson
 	url = https://github.com/Tencent/rapidjson.git
 	branch = master
+[submodule "third_party/StaticJSON"]
+	path = third_party/StaticJSON
+	url = https://github.com/netheril96/StaticJSON.git
+	branch = master
