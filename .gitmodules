@@ -1,6 +1,3 @@
-[submodule "third_party/json"]
-	path = third_party/json
-	url = https://github.com/nlohmann/json.git
 [submodule "third_party/oneTBB"]
 	path = third_party/oneTBB
 	url = https://github.com/oneapi-src/oneTBB.git
