@@ -1,9 +1,6 @@
 [submodule "third_party/json"]
 	path = third_party/json
 	url = https://github.com/nlohmann/json.git
-[submodule "third_party/pcg-cpp"]
-	path = third_party/pcg-cpp
-	url = https://github.com/imneme/pcg-cpp.git
 [submodule "third_party/StaticJSON"]
 	path = third_party/StaticJSON
 	url = https://github.com/netheril96/StaticJSON.git
