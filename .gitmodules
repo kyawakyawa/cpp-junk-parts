@@ -14,3 +14,7 @@
 	path = third_party/oneTBB
 	url = https://github.com/oneapi-src/oneTBB.git
 	branch = tbb_2020
+[submodule "third_party/pcg-cpp"]
+	path = third_party/pcg-cpp
+	url = https://github.com/imneme/pcg-cpp.git
+	branch = master
