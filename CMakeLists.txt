@@ -69,10 +69,12 @@ endif()
 # - pcg-cpp
 # - google glog (optional)
 
+set(GIT_SUBMODULE_UPDATE_COMMAND "git submodule update --init --recursive --depth 1")
+
 # json
 if (NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/json/CMakeLists.txt")
-    message(FATAL_ERROR "json was not found!"
-        "Please execute the command \"git submodule update --init --recursive\"")
+    message(FATAL_ERROR "[error] json was not found!\n"
+        "Please execute the command\n\"${GIT_SUBMODULE_UPDATE_COMMAND}\"")
 endif()
 set(JSON_BuildTests OFF CACHE INTERNAL "")
 add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/json)
@@ -86,8 +88,8 @@ if (NOT RAPIDJSON_INCLUDE_DIR)
 endif()
 
 if (NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/StaticJSON/src/staticjson.cpp")
-    message(FATAL_ERROR "StaticJson was not found!"
-        "Please execute the command \"git submodule update --init --recursive\"")
+    message(FATAL_ERROR "[error] StaticJson was not found!\n"
+        "Please execute the command\n\"${GIT_SUBMODULE_UPDATE_COMMAND}\"")
 endif()
 
 set(STATICJSON_SOURCE_FILES "${PROJECT_SOURCE_DIR}/third_party/StaticJSON/src/staticjson.cpp")
@@ -120,10 +122,24 @@ endif()
 
 # pcg-cpp
 if (NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/pcg-cpp/include")
-  message(FATAL_ERROR "pcg-cpp was not found!"
-      "Please execute the command \"git submodule update --init --recursive\"")
+  message(FATAL_ERROR "[error] pcg-cpp was not found!\n"
+      "Please execute the command\n\"${GIT_SUBMODULE_UPDATE_COMMAND}\"")
 endif()
 set(PCG_CPP_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/third_party/pcg-cpp/include)
+
+# include(${PROJECT_SOURCE_DIR}/cmake/oneTBB/TBBGet.cmake)
+# include(${PROJECT_SOURCE_DIR}/cmake/oneTBB/TBBBuild.cmake)
+# tbb_get(TBB_ROOT tbb_root SOURCE_CODE)
+# tbb_build(TBB_ROOT ${tbb_root} CONFIG_DIR TBB_DIR)
+# find_package(TBB REQUIRED)
+
+if (NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/oneTBB/cmake/TBBBuild.cmake")
+  message(FATAL_ERROR "\n[error] oneTBB was not found!\n"
+      "Please execute the command\n\"${GIT_SUBMODULE_UPDATE_COMMAND}\"")
+endif()
+include(${PROJECT_SOURCE_DIR}/third_party/oneTBB/cmake/TBBBuild.cmake)
+tbb_build(TBB_ROOT ${PROJECT_SOURCE_DIR}/third_party/oneTBB CONFIG_DIR TBB_DIR)
+find_package(TBB REQUIRED)
 
 # build selection
 add_subdirectory(pc)
