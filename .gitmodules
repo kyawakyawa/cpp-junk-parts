@@ -15,3 +15,7 @@
 	path = third_party/pcg-cpp
 	url = https://github.com/imneme/pcg-cpp.git
 	branch = master
+[submodule "third_party/spdlog"]
+	path = third_party/spdlog
+	url = https://github.com/gabime/spdlog.git
+	branch = v1.x
