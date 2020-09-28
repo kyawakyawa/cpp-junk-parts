@@ -28,6 +28,9 @@ add_executable(parallelism-ts-test ./parallelism-ts-test.cc)
 target_link_libraries(parallelism-ts-test PRIVATE ${TBB_IMPORTED_TARGETS})
 list(APPEND EXECUTABLE_TARGETS parallelism-ts-test)
 
+add_executable(std-variant-test ./std-variant-test.cc)
+list(APPEND EXECUTABLE_TARGETS std-variant-test)
+
 foreach(EXECUTABLE_TARGET IN LISTS EXECUTABLE_TARGETS)
     # set output directory for executables
     set_target_properties(${EXECUTABLE_TARGET} PROPERTIES
