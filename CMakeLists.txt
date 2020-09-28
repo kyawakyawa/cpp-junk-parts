@@ -67,6 +67,7 @@ endif()
 # - StaticJSON + rapidjson
 # - spdlog
 # - pcg-cpp
+# - oneTBB
 # - google glog (optional)
 
 set(GIT_SUBMODULE_UPDATE_COMMAND "git submodule update --init --recursive --depth 1")
