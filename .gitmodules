@@ -7,9 +7,6 @@
 [submodule "third_party/rapidjson"]
 	path = third_party/rapidjson
 	url = https://github.com/Tencent/rapidjson.git
-[submodule "third_party/spdlog"]
-	path = third_party/spdlog
-	url = https://github.com/gabime/spdlog.git
 [submodule "third_party/oneTBB"]
 	path = third_party/oneTBB
 	url = https://github.com/oneapi-src/oneTBB.git
