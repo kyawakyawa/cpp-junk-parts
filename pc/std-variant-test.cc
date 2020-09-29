@@ -27,8 +27,12 @@ SOFTWARE.
 
 class A {
 public:
-  A(void)  = default;
-  ~A(void) = default;
+  A(void) = default;
+  ~A(void) { std::cout << "destruct class A" << std::endl; }
+  A(A& a)    = default;
+  A(A&& a)   = default;
+  A& operator=(A& a) = default;
+  A& operator=(A&& a) = default;
 
   void Print(void) const {
     std::cout << msg << " in a member function" << std::endl;
@@ -42,8 +46,12 @@ private:
 
 class B {
 public:
-  B(void)  = default;
-  ~B(void) = default;
+  B(void) = default;
+  ~B(void) { std::cout << "destruct class B" << std::endl; }
+  B(B& a)    = default;
+  B(B&& a)   = default;
+  B& operator=(B& b) = default;
+  B& operator=(B&& b) = default;
 
   void Print(void) const {
     std::cout << msg << " in a member function" << std::endl;
