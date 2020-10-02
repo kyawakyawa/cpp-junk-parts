@@ -28,6 +28,12 @@ add_executable(parallelism-ts-test ./parallelism-ts-test.cc)
 target_link_libraries(parallelism-ts-test PRIVATE ${TBB_IMPORTED_TARGETS})
 list(APPEND EXECUTABLE_TARGETS parallelism-ts-test)
 
+if (USE_CPP_20)
+    add_executable(popcount ./popcount.cc)
+    list(APPEND EXECUTABLE_TARGETS popcount)
+endif()
+
+
 add_executable(std-variant-test ./std-variant-test.cc)
 list(APPEND EXECUTABLE_TARGETS std-variant-test)
 
@@ -36,7 +42,12 @@ foreach(EXECUTABLE_TARGET IN LISTS EXECUTABLE_TARGETS)
     set_target_properties(${EXECUTABLE_TARGET} PROPERTIES
       RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 
-    target_compile_features(${EXECUTABLE_TARGET} PRIVATE cxx_std_17)
+    if (USE_CPP_20)
+        target_compile_features(${EXECUTABLE_TARGET} PRIVATE cxx_std_20)
+    else()
+        target_compile_features(${EXECUTABLE_TARGET} PRIVATE cxx_std_17)
+    endif()
+
     target_compile_options(${EXECUTABLE_TARGET}
             PRIVATE
             $<$<CXX_COMPILER_ID:Clang>:-Wall -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded>

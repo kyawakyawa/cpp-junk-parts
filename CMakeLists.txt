@@ -3,6 +3,12 @@ project(cpp-junk-parts LANGUAGES CXX C)
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
+option(BUILD_WITH_MARCH_NATIVE "Enable architecture-aware optimization (-march=native)" OFF)
+
+option(USE_CCACHE "Use ccache to accelerate a build(if available)" ON)
+option(USE_CPP_20 "use c++20" OFF)
+option(USE_SANITIZER "Enable Address/Memory sanitizer to check memory leak etc..." OFF)
+
 # build type
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set(CMAKE_BUILD_TYPE "Release")
@@ -12,7 +18,6 @@ endif()
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 # CCACHE
-option(USE_CCACHE "Use ccache to accelerate a build(if available)" ON)
 find_program(CCACHE_EXE ccache)
 if(USE_CCACHE AND CCACHE_EXE)
     message(STATUS "ccache: Enabled")
@@ -24,7 +29,6 @@ else()
 endif()
 
 # Sanitizer
-option(USE_SANITIZER "Enable Address/Memory sanitizer to check memory leak etc..." OFF)
 if(USE_SANITIZER)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-omit-frame-pointer -fsanitize=address")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer -fsanitize=address")
@@ -42,7 +46,6 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og")
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 
-option(BUILD_WITH_MARCH_NATIVE "Enable architecture-aware optimization (-march=native)" OFF)
 if(BUILD_WITH_MARCH_NATIVE)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mtune=native -march=native")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mtune=native -march=native")
@@ -60,6 +63,16 @@ if (COMPILER_SUPPORTS_CXX17)
     message(STATUS "C++17 support: OK (-std=c++17)")
 else()
     message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++17 support. Please use a different C++ compiler.")
+endif()
+
+# Check C++20 support if USE_CPP_20 is ON
+if (USE_CPP_20)
+    check_cxx_compiler_flag("-std=c++20" COMPILER_SUPPORTS_CXX20)
+    if (COMPILER_SUPPORTS_CXX20)
+        message(STATUS "C++20 support: OK (-std=c++20)")
+    else()
+        message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++20 support. Please use a different C++ compiler.")
+    endif()
 endif()
 
 # find package and check third party
