@@ -6,8 +6,9 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 option(BUILD_WITH_MARCH_NATIVE "Enable architecture-aware optimization (-march=native)" OFF)
 
 option(USE_CCACHE "Use ccache to accelerate a build(if available)" ON)
-option(USE_CPP_20 "use c++20" OFF)
+option(USE_CPP20 "use c++20" OFF)
 option(USE_SANITIZER "Enable Address/Memory sanitizer to check memory leak etc..." OFF)
+option(USE_STACK_TRACE_LOGGER "Enable automatic stack trace logger of google-glog" OFF)
 
 # build type
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
@@ -65,8 +66,8 @@ else()
     message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++17 support. Please use a different C++ compiler.")
 endif()
 
-# Check C++20 support if USE_CPP_20 is ON
-if (USE_CPP_20)
+# Check C++20 support if USE_CPP20 is ON
+if (USE_CPP20)
     check_cxx_compiler_flag("-std=c++20" COMPILER_SUPPORTS_CXX20)
     if (COMPILER_SUPPORTS_CXX20)
         message(STATUS "C++20 support: OK (-std=c++20)")
@@ -124,7 +125,6 @@ target_compile_features(staticjson
 add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/spdlog)
 
 # google glog
-set(USE_STACK_TRACE_LOGGER OFF CACHE BOOL "Enable automatic stack trace logger of google-glog")
 if(USE_STACK_TRACE_LOGGER)
     message(STATUS "Stack trace logger: ENABLED")
     # Glog

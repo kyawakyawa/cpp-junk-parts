@@ -28,7 +28,7 @@ add_executable(parallelism-ts-test ./parallelism-ts-test.cc)
 target_link_libraries(parallelism-ts-test PRIVATE ${TBB_IMPORTED_TARGETS})
 list(APPEND EXECUTABLE_TARGETS parallelism-ts-test)
 
-if (USE_CPP_20)
+if (USE_CPP20)
     add_executable(popcount ./popcount.cc)
     list(APPEND EXECUTABLE_TARGETS popcount)
 endif()
@@ -42,7 +42,7 @@ foreach(EXECUTABLE_TARGET IN LISTS EXECUTABLE_TARGETS)
     set_target_properties(${EXECUTABLE_TARGET} PROPERTIES
       RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 
-    if (USE_CPP_20)
+    if (USE_CPP20)
         target_compile_features(${EXECUTABLE_TARGET} PRIVATE cxx_std_20)
     else()
         target_compile_features(${EXECUTABLE_TARGET} PRIVATE cxx_std_17)
