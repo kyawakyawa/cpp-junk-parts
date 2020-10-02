@@ -233,21 +233,23 @@ static void BenchPopCount(void) {
   printf("[Info] end check\n");
 
   const auto time_popcount =
-      std::chrono::duration_cast<std::chrono::microseconds>(end_popcount -
-                                                            start_popcount)
+      std::chrono::duration_cast<std::chrono::nanoseconds>(end_popcount -
+                                                           start_popcount)
           .count();
   const auto time_popcount_cpp20 =
-      std::chrono::duration_cast<std::chrono::microseconds>(
-          end_popcount_cpp20 - start_popcount_cpp20)
+      std::chrono::duration_cast<std::chrono::nanoseconds>(end_popcount_cpp20 -
+                                                           start_popcount_cpp20)
           .count();
   const auto time_popcount_bitset =
-      std::chrono::duration_cast<std::chrono::microseconds>(
+      std::chrono::duration_cast<std::chrono::nanoseconds>(
           end_popcount_bitset - start_popcount_bitset)
           .count();
 
-  printf("      my popcount: %3.10f ms\n", double(time_popcount) / 1000);
-  printf("   c++20 popcount: %3.10f ms\n", double(time_popcount_cpp20) / 1000);
-  printf("std::bitset count: %3.10f ms\n", double(time_popcount_bitset) / 1000);
+  printf("      my popcount: %3.6f ms\n", double(time_popcount) / 1000000);
+  printf("   c++20 popcount: %3.6f ms\n",
+         double(time_popcount_cpp20) / 1000000);
+  printf("std::bitset count: %3.6f ms\n",
+         double(time_popcount_bitset) / 1000000);
 }
 
 int main(void) {
