@@ -3,9 +3,9 @@
 ## Build
 ```bash
 $ git submodule update --init --recursive --depth 1
-$ bootstrap-ninja.sh
-$ cd cmake-build-debug
-$ ninja
+$ bootstrap-make.sh
+$ cd cmake-build-release
+$ make -j
 ```
 
 ## Update Submodule
