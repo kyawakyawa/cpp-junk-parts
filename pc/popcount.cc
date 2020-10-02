@@ -245,9 +245,9 @@ static void BenchPopCount(void) {
           end_popcount_bitset - start_popcount_bitset)
           .count();
 
-  printf("   my popcount: %3.10f ms\n", double(time_popcount) / 1000);
-  printf("c++20 popcount: %3.10f ms\n", double(time_popcount_cpp20) / 1000);
-  printf("  bitset count: %3.10f ms\n", double(time_popcount_bitset) / 1000);
+  printf("      my popcount: %3.10f ms\n", double(time_popcount) / 1000);
+  printf("   c++20 popcount: %3.10f ms\n", double(time_popcount_cpp20) / 1000);
+  printf("std::bitset count: %3.10f ms\n", double(time_popcount_bitset) / 1000);
 }
 
 int main(void) {
