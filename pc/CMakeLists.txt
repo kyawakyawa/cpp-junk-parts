@@ -1,20 +1,46 @@
 set(EXECUTABLE_TARGETS "")
+
+# executables
+# - glfw-shader
+# - glfw-texture
+# - load_messagepack
+# - parallelism-ts-test
+# - pcg32-test
+# - popcount
+# - quick-select
+# - spdlog-test
+# - staticjson-example
+# - std-variant-test 
+
+add_executable(glfw-shader ./glfw-shader.cc)
+target_link_libraries(glfw-shader PRIVATE GL GLEW glfw)
+list(APPEND EXECUTABLE_TARGETS glfw-shader)
+
+add_executable(glfw-texture ./glfw-texture.cc)
+target_link_libraries(glfw-texture PRIVATE GL GLEW glfw)
+list(APPEND EXECUTABLE_TARGETS glfw-texture)
+
 add_executable(load_messagepack load_messagepack.cc)
 target_link_libraries(load_messagepack PRIVATE nlohmann_json::nlohmann_json)
 list(APPEND EXECUTABLE_TARGETS load_messagepack)
+
+add_executable(parallelism-ts-test ./parallelism-ts-test.cc)
+target_link_libraries(parallelism-ts-test PRIVATE ${TBB_IMPORTED_TARGETS})
+list(APPEND EXECUTABLE_TARGETS parallelism-ts-test)
 
 add_executable(pcg32-test ./pcg32-test.cc)
 target_include_directories(pcg32-test SYSTEM PRIVATE ${PCG_CPP_INCLUDE_DIR})
 target_compile_options(pcg32-test PRIVATE -Wno-date-time)
 list(APPEND EXECUTABLE_TARGETS pcg32-test)
 
-add_executable(glfw-texture ./glfw-texture.cc)
-target_link_libraries(glfw-texture PRIVATE GL GLEW glfw)
-list(APPEND EXECUTABLE_TARGETS glfw-texture)
+if (USE_CPP20)
+    add_executable(popcount ./popcount.cc)
+    list(APPEND EXECUTABLE_TARGETS popcount)
+endif()
 
-add_executable(glfw-shader ./glfw-shader.cc)
-target_link_libraries(glfw-shader PRIVATE GL GLEW glfw)
-list(APPEND EXECUTABLE_TARGETS glfw-shader)
+add_executable(quick-select ./quick-select.cc)
+target_compile_definitions(quick-select PRIVATE  _LIBCPP_DEBUG _GLIBCXX_DEBUG)
+list(APPEND EXECUTABLE_TARGETS quick-select)
 
 if (USE_CPP20)
   add_executable(spdlog-test ./spdlog-test.cc)
@@ -24,20 +50,6 @@ endif()
 add_executable(staticjson-example ./staticjson-example.cc)
 target_link_libraries(staticjson-example PRIVATE staticjson)
 list(APPEND EXECUTABLE_TARGETS staticjson-example)
-
-add_executable(quick-select ./quick-select.cc)
-target_compile_definitions(quick-select PRIVATE  _LIBCPP_DEBUG _GLIBCXX_DEBUG)
-list(APPEND EXECUTABLE_TARGETS quick-select)
-
-add_executable(parallelism-ts-test ./parallelism-ts-test.cc)
-target_link_libraries(parallelism-ts-test PRIVATE ${TBB_IMPORTED_TARGETS})
-list(APPEND EXECUTABLE_TARGETS parallelism-ts-test)
-
-if (USE_CPP20)
-    add_executable(popcount ./popcount.cc)
-    list(APPEND EXECUTABLE_TARGETS popcount)
-endif()
-
 
 add_executable(std-variant-test ./std-variant-test.cc)
 list(APPEND EXECUTABLE_TARGETS std-variant-test)
