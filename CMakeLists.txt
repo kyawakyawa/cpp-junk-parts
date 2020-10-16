@@ -40,13 +40,6 @@ else()
     message(STATUS "Address/Memory sanitizer: DISABLED")
 endif()
 
-# Overall compile options
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Og")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og")
-
-set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
-
 if(BUILD_WITH_MARCH_NATIVE)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mtune=native -march=native")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mtune=native -march=native")
@@ -77,6 +70,7 @@ if (USE_CPP20)
 endif()
 
 # find package and check third party
+# - eigen
 # - json
 # - StaticJSON + rapidjson
 # - spdlog
@@ -85,6 +79,13 @@ endif()
 # - google glog (optional)
 
 set(GIT_SUBMODULE_UPDATE_COMMAND "git submodule update --init --recursive --depth 1")
+
+# Eigen
+if (NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/eigen/CMakeLists.txt")
+  message(FATAL_ERROR "[error] Eigen was not found!\n"
+        "Please execute the command\n\"${GIT_SUBMODULE_UPDATE_COMMAND}\"")
+endif()
+add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/eigen)
 
 # json
 if (NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/json/CMakeLists.txt")

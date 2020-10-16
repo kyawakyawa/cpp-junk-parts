@@ -9,7 +9,7 @@ CC=clang CXX=clang++ cmake -Bcmake-build-debug -H. \
                            -DBUILD_WITH_MARCH_NATIVE=ON \
                            -DUSE_CCACHE=ON \
                            -DUSE_CPP20=ON \
-                           -DUSE_SANITIZER=OFF \
+                           -DUSE_SANITIZER=ON \
                            -DUSE_STACK_TRACE_LOGGER=OFF
 
 mv cmake-build-debug/compile_commands.json .

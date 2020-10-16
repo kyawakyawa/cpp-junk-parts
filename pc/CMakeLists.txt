@@ -7,6 +7,7 @@ set(EXECUTABLE_TARGETS "")
 # - parallelism-ts-test
 # - pcg32-test
 # - popcount
+# - qr-decomposition
 # - quick-select
 # - spdlog-test
 # - staticjson-example
@@ -41,6 +42,10 @@ endif()
 add_executable(quick-select ./quick-select.cc)
 target_compile_definitions(quick-select PRIVATE  _LIBCPP_DEBUG _GLIBCXX_DEBUG)
 list(APPEND EXECUTABLE_TARGETS quick-select)
+
+add_executable(qr-decomposition ./qr-decomposition.cc)
+target_link_libraries(qr-decomposition PRIVATE eigen)
+list(APPEND EXECUTABLE_TARGETS qr-decomposition)
 
 if (USE_CPP20)
   add_executable(spdlog-test ./spdlog-test.cc)
