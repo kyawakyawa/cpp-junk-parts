@@ -69,7 +69,7 @@ QRDecompositionWithHouseholderTransformation(
   Eigen::Matrix<Real, N, M> R = input;
   Eigen::Matrix<Real, N, N> Q = Eigen::Matrix<Real, N, N>::Identity();
 
-  for (int k = 0; k < M; ++k) {
+  for (int k = 0; k < M - 1; ++k) {
     const Real sign = (R(k, k) >= Real(0) ? Real(1) : Real(-1));
     const int Mmk   = M - k;
 
