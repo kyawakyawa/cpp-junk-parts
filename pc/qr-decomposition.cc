@@ -78,7 +78,14 @@ QRDecompositionWithHouseholderTransformation(
     // y(0,0)の符号は+で固定したほうがいい(この値がRの対角要素になる)
     Eigen::Matrix<Real, Eigen::Dynamic, 1> y =
         Eigen::Matrix<Real, Eigen::Dynamic, 1>::Zero(Mmk, 1);
-    y(0, 0) = -sign * x.norm();
+    const Real norm = x.norm();
+    // uが0 vectorになる場合
+    // この場合はそもそも計算する必要がない
+    if (std::abs(norm - std::abs(x[0])) <
+        std::numeric_limits<Real>::epsilon()) {
+      continue;
+    }
+    y[0] = -sign * x.norm();
 
     const Eigen::Matrix<Real, Eigen::Dynamic, 1> u = (x - y).normalized();
 
