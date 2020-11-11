@@ -123,6 +123,7 @@ target_compile_features(staticjson
                         PRIVATE cxx_std_11)   
 
 # spdlog
+set(SPDLOG_BUILD_SHARED ON CACHE BOOL "Build libspdlog shared library")
 add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/spdlog)
 
 # google glog
