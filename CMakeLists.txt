@@ -70,6 +70,7 @@ if (USE_CPP20)
 endif()
 
 # find package and check third party
+# - thread
 # - eigen
 # - json
 # - StaticJSON + rapidjson
@@ -79,6 +80,9 @@ endif()
 # - google glog (optional)
 
 set(GIT_SUBMODULE_UPDATE_COMMAND "git submodule update --init --recursive --depth 1")
+
+# Thread
+find_package(Threads REQUIRED)
 
 # Eigen
 if (NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/eigen/CMakeLists.txt")

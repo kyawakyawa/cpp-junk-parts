@@ -29,6 +29,10 @@ add_executable(parallelism-ts-test ./parallelism-ts-test.cc)
 target_link_libraries(parallelism-ts-test PRIVATE ${TBB_IMPORTED_TARGETS})
 list(APPEND EXECUTABLE_TARGETS parallelism-ts-test)
 
+add_executable(parallel-examples ./parallel-examples.cc)
+target_link_libraries(parallel-examples PRIVATE Threads::Threads ${TBB_IMPORTED_TARGETS})
+list(APPEND EXECUTABLE_TARGETS parallel-examples)
+
 add_executable(pcg32-test ./pcg32-test.cc)
 target_include_directories(pcg32-test SYSTEM PRIVATE ${PCG_CPP_INCLUDE_DIR})
 target_compile_options(pcg32-test PRIVATE -Wno-date-time)
