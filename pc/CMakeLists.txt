@@ -1,6 +1,7 @@
 set(EXECUTABLE_TARGETS "")
 
 # executables
+# - cmp-function-functor-lambda
 # - glfw-shader
 # - glfw-texture
 # - load_messagepack
@@ -12,6 +13,9 @@ set(EXECUTABLE_TARGETS "")
 # - spdlog-test
 # - staticjson-example
 # - std-variant-test 
+
+add_executable(cmp-function-functor-lambda ./cmp-function-functor-lambda.cc)
+list(APPEND EXECUTABLE_TARGETS cmp-function-functor-lambda)
 
 add_executable(glfw-shader ./glfw-shader.cc)
 target_link_libraries(glfw-shader PRIVATE GL GLEW glfw)
