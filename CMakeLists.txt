@@ -30,44 +30,40 @@ else()
 endif()
 
 # Sanitizer
-if(USE_SANITIZER)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-omit-frame-pointer -fsanitize=address")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer -fsanitize=address")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fno-omit-frame-pointer -fsanitize=address")
-    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fno-omit-frame-pointer -fsanitize=address")
-    message(STATUS "Address/Memory sanitizer: ENABLED")
-else()
-    message(STATUS "Address/Memory sanitizer: DISABLED")
-endif()
+if (MSVC)
+else (MSVC)
+  if(USE_SANITIZER)
+      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-omit-frame-pointer -fsanitize=address")
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer -fsanitize=address")
+      set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fno-omit-frame-pointer -fsanitize=address")
+      set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fno-omit-frame-pointer -fsanitize=address")
+      message(STATUS "Address/Memory sanitizer: ENABLED")
+  else(USE_SANITIZER)
+      message(STATUS "Address/Memory sanitizer: DISABLED")
+  endif(USE_SANITIZER)
+endif(MSVC)
 
-if(BUILD_WITH_MARCH_NATIVE)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mtune=native -march=native")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mtune=native -march=native")
-    message(STATUS "Architecture-aware optimization (-march=native): ENABLED")
-else()
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mtune=native")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mtune=native")
-    message(STATUS "Architecture-aware optimization (-march=native): DISABLED")
-endif()
-
-# Check C++17 support
-include(CheckCXXCompilerFlag)
-check_cxx_compiler_flag("-std=c++17" COMPILER_SUPPORTS_CXX17)
-if (COMPILER_SUPPORTS_CXX17)
-    message(STATUS "C++17 support: OK (-std=c++17)")
-else()
-    message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++17 support. Please use a different C++ compiler.")
-endif()
-
-# Check C++20 support if USE_CPP20 is ON
-if (USE_CPP20)
-    check_cxx_compiler_flag("-std=c++20" COMPILER_SUPPORTS_CXX20)
-    if (COMPILER_SUPPORTS_CXX20)
-        message(STATUS "C++20 support: OK (-std=c++20)")
-    else()
-        message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++20 support. Please use a different C++ compiler.")
-    endif()
-endif()
+if (MSVC)
+else (MSVC)
+  # Check C++17 support
+  include(CheckCXXCompilerFlag)
+  check_cxx_compiler_flag("-std=c++17" COMPILER_SUPPORTS_CXX17)
+  if (COMPILER_SUPPORTS_CXX17)
+      message(STATUS "C++17 support: OK (-std=c++17)")
+  else()
+      message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++17 support. Please use a different C++ compiler.")
+  endif()
+  
+  # Check C++20 support if USE_CPP20 is ON
+  if (USE_CPP20)
+      check_cxx_compiler_flag("-std=c++20" COMPILER_SUPPORTS_CXX20)
+      if (COMPILER_SUPPORTS_CXX20)
+          message(STATUS "C++20 support: OK (-std=c++20)")
+      else()
+          message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++20 support. Please use a different C++ compiler.")
+      endif()
+  endif()
+endif(MSVC)
 
 # find package and check third party
 # - thread
@@ -85,11 +81,7 @@ set(GIT_SUBMODULE_UPDATE_COMMAND "git submodule update --init --recursive --dept
 find_package(Threads REQUIRED)
 
 # Eigen
-if (NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/eigen/CMakeLists.txt")
-  message(FATAL_ERROR "[error] Eigen was not found!\n"
-        "Please execute the command\n\"${GIT_SUBMODULE_UPDATE_COMMAND}\"")
-endif()
-add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/eigen)
+find_package(Eigen3 3.3 REQUIRED)
 
 # json
 if (NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/json/CMakeLists.txt")
@@ -115,7 +107,7 @@ endif()
 set(STATICJSON_SOURCE_FILES "${PROJECT_SOURCE_DIR}/third_party/StaticJSON/src/staticjson.cpp")
 add_library(staticjson SHARED ${STATICJSON_SOURCE_FILES})
 
-target_include_directories(staticjson PUBLIC SYSTEM ${RAPIDJSON_INCLUDE_DIR})
+target_include_directories(staticjson PUBLIC ${RAPIDJSON_INCLUDE_DIR})
 target_include_directories(staticjson PUBLIC ${PROJECT_SOURCE_DIR}/third_party/StaticJSON/include)
 
 target_compile_options(staticjson PRIVATE

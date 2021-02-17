@@ -26,11 +26,18 @@ SOFTWARE.
 
 #include <iostream>
 #include <typeinfo>
+
+#include "macros.h"
+
+IGNORE_STRICT_WARNING_PUSH
+
 #ifdef USE_STACK_TRACE_LOGGER
 #include <glog/logging.h>
 #endif
 
 #include "pcg_random.hpp"
+
+IGNORE_STRICT_WARNING_POP
 
 namespace kyawakyawa {
 using RNG = pcg32;

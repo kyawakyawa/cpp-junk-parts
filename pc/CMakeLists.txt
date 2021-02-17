@@ -38,7 +38,7 @@ target_link_libraries(parallel-examples PRIVATE Threads::Threads ${TBB_IMPORTED_
 list(APPEND EXECUTABLE_TARGETS parallel-examples)
 
 add_executable(pcg32-test ./pcg32-test.cc)
-target_include_directories(pcg32-test SYSTEM PRIVATE ${PCG_CPP_INCLUDE_DIR})
+target_include_directories(pcg32-test PRIVATE ${PCG_CPP_INCLUDE_DIR})
 target_compile_options(pcg32-test PRIVATE -Wno-date-time)
 list(APPEND EXECUTABLE_TARGETS pcg32-test)
 
@@ -52,7 +52,7 @@ target_compile_definitions(quick-select PRIVATE  _LIBCPP_DEBUG _GLIBCXX_DEBUG)
 list(APPEND EXECUTABLE_TARGETS quick-select)
 
 add_executable(qr-decomposition ./qr-decomposition.cc)
-target_link_libraries(qr-decomposition PRIVATE eigen)
+target_link_libraries(qr-decomposition PRIVATE Eigen3::Eigen)
 list(APPEND EXECUTABLE_TARGETS qr-decomposition)
 
 if (USE_CPP20)
@@ -81,12 +81,17 @@ foreach(EXECUTABLE_TARGET IN LISTS EXECUTABLE_TARGETS)
     target_compile_options(${EXECUTABLE_TARGET}
             PRIVATE
             $<$<CXX_COMPILER_ID:Clang>:-Wall -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded>
-            $<$<CXX_COMPILER_ID:GCC>:-pedantic -Wall -Wextra -Wcast-align -Wcast-qual -Wctor-dtor-privacy -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-declarations -Wmissing-include-dirs -Wnoexcept -Wold-style-cast -Woverloaded-virtual -Wredundant-decls -Wshadow -Wsign-conversion -Wsign-promo -Wstrict-null-sentinel -Wstrict-overflow=5 -Wswitch-default -Wundef -Werror -Wno-unused>
+            $<$<CXX_COMPILER_ID:AppleClang>:-Wall -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded>
+            $<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Wswitch-enum -Wswitch-default -Winvalid-pch -Wredundant-decls -Wformat=2 -Wmissing-format-attribute -Wformat-nonliteral>
             $<$<CXX_COMPILER_ID:MSVC>:/W4>)
     target_link_libraries(${EXECUTABLE_TARGET} PRIVATE spdlog::spdlog)
+
+    target_include_directories(${EXECUTABLE_TARGET} PRIVATE ${PROJECT_SOURCE_DIR}/inc)
+
     if(USE_STACK_TRACE_LOGGER)
         target_compile_definitions(${EXECUTABLE_TARGET}
                 PRIVATE -DUSE_STACK_TRACE_LOGGER)
         target_link_libraries(${EXECUTABLE_TARGET} PRIVATE glog::glog)
     endif()
+
 endforeach()

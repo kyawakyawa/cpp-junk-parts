@@ -25,16 +25,19 @@ SOFTWARE.
 #include <fstream>
 #include <iostream>
 
+#include "macros.h"
+
 #ifdef USE_STACK_TRACE_LOGGER
 #include <glog/logging.h>
 #endif
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Weverything"
+IGNORE_STRICT_WARNING_PUSH
+
 #include <spdlog/spdlog.h>
 
 #include <nlohmann/json.hpp>
-#pragma clang diagnostic pop
+
+IGNORE_STRICT_WARNING_POP
 
 namespace kyawakyawa {
 static std::vector<uint8_t> load_msgpack(const std::string& filename) {

@@ -31,16 +31,13 @@ SOFTWARE.
 #include <thread>
 #include <vector>
 
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Weverything"
-#endif
+#include "macros.h"
+
+IGNORE_STRICT_WARNING_PUSH
 
 #include "spdlog/spdlog.h"
 
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif
+IGNORE_STRICT_WARNING_POP
 
 template <class InputIterator, class T>
 T ParallelReduce(size_t num_threads, InputIterator first, InputIterator last,

@@ -28,10 +28,9 @@ SOFTWARE.
 #include <map>
 #include <string>
 
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Weverything"
-#endif
+#include "macros.h"
+
+IGNORE_STRICT_WARNING_PUSH
 
 #include <spdlog/spdlog.h>
 
@@ -40,9 +39,7 @@ SOFTWARE.
 #include <glog/logging.h>
 #endif
 
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif
+IGNORE_STRICT_WARNING_POP
 
 struct A {
   int hoge        = 0;

@@ -22,16 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Weverything"
-#endif
+#include "macros.h"
+
+IGNORE_STRICT_WARNING_PUSH
 
 #include "spdlog/spdlog.h"
 
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif
+IGNORE_STRICT_WARNING_POP
 
 #include <filesystem>
 

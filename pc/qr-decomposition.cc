@@ -25,16 +25,13 @@ SOFTWARE.
 #include <iostream>
 #include <utility>
 
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Weverything"
-#endif
+#include "macros.h"
+
+IGNORE_STRICT_WARNING_PUSH
 
 #include <Eigen/Core>
 
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif
+IGNORE_STRICT_WARNING_POP
 
 // reference http://takashiijiri.com/study/miscs/QRfactorization.htm
 
