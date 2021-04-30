@@ -12,6 +12,7 @@ set(EXECUTABLE_TARGETS "")
 # - quick-select
 # - spdlog-test
 # - staticjson-example
+# - std-variant-and-concept 
 # - std-variant-test 
 
 add_executable(cmp-function-functor-lambda ./cmp-function-functor-lambda.cc)
@@ -45,7 +46,7 @@ list(APPEND EXECUTABLE_TARGETS pcg32-test)
 if (USE_CPP20)
     add_executable(popcount ./popcount.cc)
     list(APPEND EXECUTABLE_TARGETS popcount)
-endif()
+endif(USE_CPP20)
 
 add_executable(quick-select ./quick-select.cc)
 target_compile_definitions(quick-select PRIVATE  _LIBCPP_DEBUG _GLIBCXX_DEBUG)
@@ -63,6 +64,11 @@ endif()
 add_executable(staticjson-example ./staticjson-example.cc)
 target_link_libraries(staticjson-example PRIVATE staticjson)
 list(APPEND EXECUTABLE_TARGETS staticjson-example)
+
+if (USE_CPP20)
+    add_executable(std-variant-and-concept ./std-variant-and-concept.cc)
+    list(APPEND EXECUTABLE_TARGETS std-variant-and-concept)
+endif(USE_CPP20)
 
 add_executable(std-variant-test ./std-variant-test.cc)
 list(APPEND EXECUTABLE_TARGETS std-variant-test)
