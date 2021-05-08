@@ -67,11 +67,9 @@ public:
 //
 // template <DebugDisplay... Args>
 // using VariantOfAB = std::variant<Args...>;
+// using Base = VariantOfAB<A, B>;
 
-template <typename... Args>
-using VariantOfAB = std::variant<Args...>;
-
-using Base = VariantOfAB<A, B /*, int */ /* error */>;
+using Base = std::variant<A, B /*, int */ /* error */>;
 
 CHECK_VARIANT_CONSTRAINTS(Base, DebugDisplay);
 // error
