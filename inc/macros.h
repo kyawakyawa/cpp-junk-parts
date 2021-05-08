@@ -78,3 +78,30 @@ SOFTWARE.
 #define IGNORE_STRICT_WARNING_POP
 
 #endif
+
+// clang-format off
+//
+#include <variant>
+
+#define CHECK_VARIANT_CONSTRAINTS(Variant, Concept) \
+  template <Concept T> \
+  void _Check##Variant##Satisfies##Concept([[maybe_unused]] T t) {} \
+  \
+  template <size_t I> \
+  void __Check##Variant##Satisfies##Concept() {\
+    typename std::variant_alternative<I, Variant>::type hoge = {}; \
+    _Check##Variant##Satisfies##Concept(hoge); \
+    __Check##Variant##Satisfies##Concept<I - 1>(); \
+  } \
+  \
+  template <> \
+  void __Check##Variant##Satisfies##Concept<0>() { \
+    std::variant_alternative<0, Variant>::type hoge = {}; \
+    _Check##Variant##Satisfies##Concept(hoge); \
+  } \
+  \
+  [[maybe_unused]] static void ___Check##Variant##Satisfies##Concept() { \
+    __Check##Variant##Satisfies##Concept<std::variant_size<Variant>::value - 1>(); \
+  }
+
+// clang-format on
