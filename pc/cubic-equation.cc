@@ -55,7 +55,7 @@ T NewtonMethodForCubicEquation(const T b, const T c, const T d, T x,
 }
 
 template <typename T = double>
-inline void ComputeRealSolutoianOfCubicEquation(
+inline void ComputeRealSolutionOfCubicEquation(
     T b, const T c, const T d, T* solutions, size_t* num_solutions,
     T D_thr = 1e-14, T multiple_solution_thr = 1e-14) {
   // x^3 + b x^2  + c x + d =  0;
@@ -98,26 +98,31 @@ inline void ComputeRealSolutoianOfCubicEquation(
 
     *num_solutions = 3;
   } else {
-    const T alpha_3 = cbrt(q + sqrt(std::max(D, T(0))));
+    const T sqD = (D < D_thr ? T(0.0) : sqrt(D));
+    const T alpha_3 =
+        (!std::signbit(q)
+             ? cbrt(q + sqD)
+             : cbrt(q - sqD));  // alpha3 の絶対値が大きくなるように
+    const T beta_3 =
+        (D < D_thr ? alpha_3
+                   : p / alpha_3);  // 重解のときはゼロ割に近くなるので場合分け
 
-#if 1
-    const T beta_3 = cbrt(q - sqrt(std::max(D, T(0))));
-    const T y1     = alpha_3 + beta_3;
-#else
-    // FIXME alpha_3 nearly equal to zero case
-    const T y1 = alpha_3 + p / alpha_3;
-#endif
+    const T y1 = alpha_3 + beta_3;
 
     solutions[0] = y1 - b;
     // ret.emplace_back(NewtonMethodForCubicEquation(original_b, c, d, y1 - b));
 
     *num_solutions = 1;
-    if (D < D_thr && abs(y1 * T(-0.5)) > multiple_solution_thr) {
-      solutions[1] = y1 * T(-0.5) - b;
-      // ret.emplace_back(
-      //     NewtonMethodForCubicEquation(original_b, c, d, y1 * T(-0.5) - b));
 
-      ++(*num_solutions);
+    if (D < D_thr) {
+      const T y2_cad = y1 * T(-0.5);
+      if (abs(y2_cad) > multiple_solution_thr) {
+        solutions[1] = y2_cad - b;
+        // ret.emplace_back(
+        //     NewtonMethodForCubicEquation(original_b, c, d, y2_cad - b));
+
+        ++(*num_solutions);
+      }
     }
   }
 }
@@ -126,14 +131,14 @@ static bool Test(const double b, const double c, const double d) {
   double solutions[3];
   size_t num_solutions;
 
-  ComputeRealSolutoianOfCubicEquation(b, c, d, solutions, &num_solutions);
+  ComputeRealSolutionOfCubicEquation(b, c, d, solutions, &num_solutions);
 
   if (!(0 < num_solutions && num_solutions < 4)) {
     return false;
   }
 
   for (size_t i = 0; i < num_solutions; ++i) {
-    if (abs(EvaluateCubicFunction(b, c, d, solutions[i])) > 5e-4) {
+    if (abs(EvaluateCubicFunction(b, c, d, solutions[i])) > 1e-12) {
       printf("error %e\n", abs(EvaluateCubicFunction(b, c, d, solutions[i])));
       return false;
     }
@@ -148,7 +153,7 @@ static long Benchmark(const double b, const double c, const double d) {
   size_t num_solutions;
 
   start = std::chrono::high_resolution_clock::now();
-  ComputeRealSolutoianOfCubicEquation(b, c, d, solutions, &num_solutions);
+  ComputeRealSolutionOfCubicEquation(b, c, d, solutions, &num_solutions);
   end = std::chrono::high_resolution_clock::now();
 
   const long com_time =
@@ -161,18 +166,12 @@ static void TryAndOutput(const double b, const double c, const double d) {
   double solutions[3];
   size_t num_solutions;
 
-  ComputeRealSolutoianOfCubicEquation(b, c, d, solutions, &num_solutions);
+  ComputeRealSolutionOfCubicEquation(b, c, d, solutions, &num_solutions);
 
   if (solutions[0] > solutions[1]) std::swap(solutions[0], solutions[1]);
   if (num_solutions == 3) {
     if (solutions[1] > solutions[2]) std::swap(solutions[1], solutions[2]);
     if (solutions[0] > solutions[1]) std::swap(solutions[0], solutions[1]);
-  }
-
-  if (num_solutions == 3) {
-    printf("Newton\n");
-  } else {
-    printf("Cardano\n");
   }
 
   printf("number of soluton: %lu\n", num_solutions);

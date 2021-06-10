@@ -10,6 +10,7 @@ set(EXECUTABLE_TARGETS "")
 # - pcg32-test
 # - popcount
 # - qr-decomposition
+# - quaric-equation
 # - quick-select
 # - spdlog-test
 # - staticjson-example
@@ -59,6 +60,9 @@ list(APPEND EXECUTABLE_TARGETS quick-select)
 add_executable(qr-decomposition ./qr-decomposition.cc)
 target_link_libraries(qr-decomposition PRIVATE Eigen3::Eigen)
 list(APPEND EXECUTABLE_TARGETS qr-decomposition)
+
+add_executable(quartic-equation quartic-equation.cc)
+list(APPEND EXECUTABLE_TARGETS quartic-equation)
 
 if (USE_CPP20)
   add_executable(spdlog-test ./spdlog-test.cc)
