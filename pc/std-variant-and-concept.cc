@@ -44,7 +44,7 @@ concept Error = requires(T& x) {
 };
 
 template <class T>
-concept DebugDisplay = Debug<T>&& Display<T>;
+concept DebugDisplay = Debug<T> && Display<T>;
 
 class A {
 public:
@@ -72,8 +72,19 @@ public:
 using Base = std::variant<A, B /*, int */ /* error */>;
 
 CHECK_VARIANT_CONSTRAINTS(Base, DebugDisplay);
+
 // error
 // CHECK_VARIANT_CONSTRAINTS(Base, Error);
+
+VARIANT_CONSTRAINTS_CHECKER(DebugDisplay)
+VARIANT_CONSTRAINTS_CHECKER(Error)
+
+[[maybe_unused]] static void CheckVariantSatisfiesConcepts(void) {
+  CheckVariantSatisfiesDebugDisplay<Base>();
+
+  // error
+  // CheckVariantSatisfiesError<Base>();
+}
 
 int main(void) {
   std::vector<Base> hoge;

@@ -90,18 +90,33 @@ SOFTWARE.
   template <size_t I> \
   void __Check##Variant##Satisfies##Concept() {\
     [[maybe_unused]] \
-    _Check##Variant##Satisfies##Concept<typename std::variant_alternative<I, Variant>::type> hoge = {}; \
-    __Check##Variant##Satisfies##Concept<I - 1>(); \
-  } \
-  \
-  template <> \
-  void __Check##Variant##Satisfies##Concept<0>() { \
-    [[maybe_unused]] \
-    _Check##Variant##Satisfies##Concept<typename std::variant_alternative<0, Variant>::type> hoge = {}; \
+    _Check##Variant##Satisfies##Concept<typename std::variant_alternative_t<I, Variant>> hoge = {}; \
+    if constexpr (I > 0) { \
+      __Check##Variant##Satisfies##Concept<I - 1>(); \
+    } \
   } \
   \
   [[maybe_unused]] static void ___Check##Variant##Satisfies##Concept() { \
-    __Check##Variant##Satisfies##Concept<std::variant_size<Variant>::value - 1>(); \
+    __Check##Variant##Satisfies##Concept<std::variant_size_v<Variant> - 1>(); \
   }
+
+#define VARIANT_CONSTRAINTS_CHECKER(Concept) \
+template <size_t I, typename Variant> \
+struct _CheckVariantSatisfies##Concept { \
+  void operator()(void) { \
+    static_assert(Concept<typename std::variant_alternative_t<I, Variant>>, \
+                  "The type of std::variant<>'s alternative does not satisfies concept " #Concept "."); \
+    if constexpr (I > 0) { \
+      _CheckVariantSatisfies##Concept<I - 1, Variant> checker; \
+      checker(); \
+    } \
+  } \
+}; \
+\
+template <typename Variant> \
+void CheckVariantSatisfies##Concept(void) { \
+  _CheckVariantSatisfies##Concept<std::variant_size_v<Variant> - 1, Variant> checker; \
+  checker(); \
+}
 
 // clang-format on
