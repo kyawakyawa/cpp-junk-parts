@@ -109,3 +109,33 @@ foreach(EXECUTABLE_TARGET IN LISTS EXECUTABLE_TARGETS)
     endif()
 
 endforeach()
+
+set(C_PROGRAMS "")
+add_executable(c-quartic-equation c-quartic-equation.c)
+target_compile_options(c-quartic-equation
+        PRIVATE
+        $<$<CXX_COMPILER_ID:Clang>:-Ofast>
+        $<$<CXX_COMPILER_ID:AppleClang>:-Ofast>
+        $<$<CXX_COMPILER_ID:GNU>:-Ofast>
+        $<$<CXX_COMPILER_ID:MSVC>:/fp:fast>)
+ 
+list(APPEND C_PROGRAMS c-quartic-equation)
+
+foreach(C_PROGRAM IN LISTS C_PROGRAMS)
+
+    # set output directory for c programs
+    set_target_properties(${C_PROGRAM} PROPERTIES
+      RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+
+    target_compile_options(${C_PROGRAM}
+            PRIVATE
+            $<$<CXX_COMPILER_ID:Clang>:-Wall -Weverything -Wno-padded>
+            $<$<CXX_COMPILER_ID:AppleClang>:-Wall -Weverything -Wno-padded>
+            $<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Wswitch-enum -Wswitch-default -Winvalid-pch -Wredundant-decls -Wformat=2 -Wmissing-format-attribute -Wformat-nonliteral>
+            $<$<CXX_COMPILER_ID:MSVC>:/W4>)
+
+    target_include_directories(${C_PROGRAM} PRIVATE ${PROJECT_SOURCE_DIR}/inc)
+
+    target_link_libraries(${C_PROGRAM} PRIVATE m)
+    
+endforeach()
