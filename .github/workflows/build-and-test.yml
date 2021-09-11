@@ -17,6 +17,7 @@ jobs:
       - name: build
         run: |
           CC=clang-12 CXX=clang++-12 cmake -Bcmake-build-release -H. \
+                           -DCMAKE_TOOLCHAIN_FILE=/usr/local/share/vcpkg/scripts/buildsystems/vcpkg.cmake \
                            -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
                            -DCMAKE_BUILD_TYPE=Release \
                            -DBUILD_WITH_MARCH_NATIVE=OFF \
