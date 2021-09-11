@@ -45,11 +45,10 @@ jobs:
           fetch-depth: 0 # https://itneko.com/actions-checkout/
           #token: ${{ secrets.SUB_MODULE_TOKEN }}
           submodules: true
-      - name: nmake
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: win64
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.3
       - name: install library
+        shell: powershell
         run: |
           C:\vcpkg\vcpkg.exe update
           C:\vcpkg\vcpkg.exe install eigen3:x64-windows
@@ -57,17 +56,25 @@ jobs:
           C:\vcpkg\vcpkg.exe install glew:x64-windows
           C:\vcpkg\vcpkg.exe install glfw3:x64-windows
       - name: build
+        shell: powershell
         run: |
-          cmake  -G "NMake Makefiles" -Bcmake-build-release -H. `
-                 -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake `
-                 -DCMAKE_EXPORT_COMPILE_COMMANDS=1 `
-                 -DCMAKE_BUILD_TYPE=Release `
-                 -DBUILD_WITH_MARCH_NATIVE=OFF `
-                 -DUSE_CCACHE=OFF `
-                 -DUSE_CPP20=ON `
-                 -DUSE_SANITIZER=OFF `
-                 -DUSE_STACK_TRACE_LOGGER=ON
+          msbuild -version
+          $msbuildPlatform = "x64"
+          $buildDirectory = "build_win_x64"
+          mkdir $buildDirectory -Force -ErrorAction Stop | Out-Null
+          cd $buildDirectory
+          cmake  -G "Visual Studio 16 2019" `
+                 -A $msbuildPlatform `
+                 -D CMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake `
+                 -D CMAKE_EXPORT_COMPILE_COMMANDS=1 `
+                 -D CMAKE_BUILD_TYPE=Release `
+                 -D BUILD_WITH_MARCH_NATIVE=OFF `
+                 -D USE_CCACHE=OFF `
+                 -D USE_CPP20=ON `
+                 -D USE_SANITIZER=OFF `
+                 -D USE_STACK_TRACE_LOGGER=ON `
+                 ..
+          msbuild INSTALL.vcxproj /t:build /p:configuration=Release /p:platform=$msbuildPlatform -maxcpucount
           dir
-          ls
           #cd cmake-build-release
           #nmake -j2
