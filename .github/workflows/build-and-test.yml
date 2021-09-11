@@ -30,5 +30,7 @@ jobs:
           make -j4
       - name: run_test
         run: |
+          pwd
+          cd cmake-build-release
           ./c-quartic-equation
           ./quartic-equation
