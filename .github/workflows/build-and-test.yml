@@ -39,12 +39,13 @@ jobs:
   build-and-test-on-windows:
     runs-on: windows-2022
     steps:
-      - name: uses
+      - name: checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 0 # https://itneko.com/actions-checkout/
           #token: ${{ secrets.SUB_MODULE_TOKEN }}
           submodules: true
+      - name: nmake
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: win64
