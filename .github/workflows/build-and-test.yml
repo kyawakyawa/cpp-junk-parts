@@ -14,6 +14,7 @@ jobs:
         run: |
           vcpkg update
           vcpkg install eigen3:x64-linux
+          vcpkg install glog:x64-linux
           sudo apt install -y libglfw3 libglfw3-dev libglew-dev
         shell: bash
       - name: build
@@ -26,7 +27,7 @@ jobs:
                            -DUSE_CCACHE=OFF \
                            -DUSE_CPP20=ON \
                            -DUSE_SANITIZER=OFF \
-                           -DUSE_STACK_TRACE_LOGGER=OFF
+                           -DUSE_STACK_TRACE_LOGGER=ON
           cd cmake-build-release
           make -j4
       - name: run_test
