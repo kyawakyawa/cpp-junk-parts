@@ -70,10 +70,11 @@ jobs:
                  -D CMAKE_BUILD_TYPE=Release `
                  -D BUILD_WITH_MARCH_NATIVE=OFF `
                  -D USE_CCACHE=OFF `
-                 -D USE_CPP20=OFF ` # TODO ON
+                 -D USE_CPP20=OFF `
                  -D USE_SANITIZER=OFF `
                  -D USE_STACK_TRACE_LOGGER=ON `
                  ..
+                  # TODO -D USE_CPP20=ON
           msbuild INSTALL.vcxproj /t:build /p:configuration=Release /p:platform=$msbuildPlatform -maxcpucount
           dir
           .\Release\c-quartic-equation.exe
