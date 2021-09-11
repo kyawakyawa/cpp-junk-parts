@@ -24,11 +24,11 @@ add_executable(cubic-equation ./cubic-equation.cc)
 list(APPEND EXECUTABLE_TARGETS cubic-equation)
 
 add_executable(glfw-shader ./glfw-shader.cc)
-target_link_libraries(glfw-shader PRIVATE OpenGL::GL ${GLEW_LIBRARIES} glfw)
+target_link_libraries(glfw-shader PRIVATE OpenGL::GL GLEW::GLEW glfw)
 list(APPEND EXECUTABLE_TARGETS glfw-shader)
 
 add_executable(glfw-texture ./glfw-texture.cc)
-target_link_libraries(glfw-texture PRIVATE OpenGL::GL ${GLEW_LIBRARIES} glfw)
+target_link_libraries(glfw-texture PRIVATE OpenGL::GL GLEW::GLEW glfw)
 list(APPEND EXECUTABLE_TARGETS glfw-texture)
 
 add_executable(load_messagepack load_messagepack.cc)

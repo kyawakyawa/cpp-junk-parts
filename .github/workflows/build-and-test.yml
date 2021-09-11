@@ -67,5 +67,7 @@ jobs:
                  -DUSE_CPP20=ON `
                  -DUSE_SANITIZER=OFF `
                  -DUSE_STACK_TRACE_LOGGER=ON
-          cd cmake-build-release
-          nmake -j2
+          dir
+          ls
+          #cd cmake-build-release
+          #nmake -j2
