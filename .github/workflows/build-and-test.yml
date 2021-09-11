@@ -1,0 +1,32 @@
+naem: build-and-test
+on: [push]
+jobs:
+  build-and-test:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # https://itneko.com/actions-checkout/
+          token: ${{ secrets.SUB_MODULE_TOKEN }}
+          submodules: true
+      - name: install library
+        run: |
+          vcpkg install eigen3:x64-linux
+        shell: bash
+      - name: build
+        run: |
+          CC=clang-12 CXX=clang++-12 cmake -Bcmake-build-release -H. \
+                           -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
+                           -DCMAKE_BUILD_TYPE=Release \
+                           -DBUILD_WITH_MARCH_NATIVE=OFF \
+                           -DUSE_CCACHE=OFF \
+                           -DUSE_CPP20=ON \
+                           -DUSE_SANITIZER=OFF \
+                           -DUSE_STACK_TRACE_LOGGER=OFF
+          cd cmake-build-release
+          make -j4
+      - name run_test
+        run: |
+          ./c-quartic-equation
+          ./quartic-equation

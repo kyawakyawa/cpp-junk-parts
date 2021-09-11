@@ -63,12 +63,14 @@ list(APPEND EXECUTABLE_TARGETS qr-decomposition)
 
 add_executable(quartic-equation quartic-equation.cc)
 list(APPEND EXECUTABLE_TARGETS quartic-equation)
-target_compile_options(quartic-equation
-        PRIVATE
-        $<$<CXX_COMPILER_ID:Clang>:-Ofast>
-        $<$<CXX_COMPILER_ID:AppleClang>:-Ofast>
-        $<$<CXX_COMPILER_ID:GNU>:>
-        $<$<CXX_COMPILER_ID:MSVC>:/fp:fast>)
+if(${CMAKE_BUILD_TYPE} MATCHES Release)
+    target_compile_options(quartic-equation
+            PRIVATE
+            $<$<CXX_COMPILER_ID:Clang>:-Ofast>
+            $<$<CXX_COMPILER_ID:AppleClang>:-Ofast>
+            $<$<CXX_COMPILER_ID:GNU>:>
+            $<$<CXX_COMPILER_ID:MSVC>:/fp:fast>)
+endif(${CMAKE_BUILD_TYPE} MATCHES Release)
 
 if (USE_CPP20)
   add_executable(spdlog-test ./spdlog-test.cc)
@@ -118,12 +120,14 @@ endforeach()
 
 set(C_PROGRAMS "")
 add_executable(c-quartic-equation c-quartic-equation.c)
-target_compile_options(c-quartic-equation
-        PRIVATE
-        $<$<CXX_COMPILER_ID:Clang>:-Ofast>
-        $<$<CXX_COMPILER_ID:AppleClang>:-Ofast>
-        $<$<CXX_COMPILER_ID:GNU>:>
-        $<$<CXX_COMPILER_ID:MSVC>:/fp:fast>)
+if(${CMAKE_BUILD_TYPE} MATCHES Release)
+    target_compile_options(c-quartic-equation
+            PRIVATE
+            $<$<CXX_COMPILER_ID:Clang>:-Ofast>
+            $<$<CXX_COMPILER_ID:AppleClang>:-Ofast>
+            $<$<CXX_COMPILER_ID:GNU>:>
+            $<$<CXX_COMPILER_ID:MSVC>:/fp:fast>)
+endif(${CMAKE_BUILD_TYPE} MATCHES Release)
  
 list(APPEND C_PROGRAMS c-quartic-equation)
 
