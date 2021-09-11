@@ -24,51 +24,82 @@ SOFTWARE.
 
 #include <assert.h>
 #include <math.h>
+#include <time.h>
 
 #include <algorithm>
-#include <chrono>
-#include <optional>
+#include <limits>
 #include <random>
-#include <vector>
+
+#define KAHAN_ADD(sum, add)    \
+  diff   = add - remain;       \
+  tmp    = sum + diff;         \
+  remain = (tmp - sum) - diff; \
+  sum    = tmp
+
+#define KAHAN_ADD_LAST(sum, add) \
+  diff = add - remain;           \
+  tmp  = sum + diff;             \
+  sum  = tmp
 
 template <typename T = double>
-T EvaluateQuadraticFunction(const T b, const T c, const T x) {
-  return (x + b) * x + c;
+void RefineCubicEquationSolution(const T b, const T c, const T d, T* x) {
+  const T x2 = *x * *x;
+
+  T numerator = T(0), denominator = T(0);
+  T diff, tmp, remain;
+
+  remain = T(0);
+  KAHAN_ADD(numerator, d);
+  KAHAN_ADD(numerator, c * *x);
+  KAHAN_ADD(numerator, b * x2);
+  KAHAN_ADD_LAST(numerator, *x * x2);
+
+  remain = T(0);
+  KAHAN_ADD(denominator, c);
+  KAHAN_ADD(denominator, T(2) * b * *x);
+  KAHAN_ADD_LAST(denominator, T(3) * x2);
+
+  if (fabs(denominator) >
+      std::numeric_limits<T>::epsilon()) {  // TODO Use the better way with
+                                            // Ofast option
+    *x -= numerator / denominator;
+  }
 }
 
 template <typename T = double>
-T EvaluateCubicFunction(const T b, const T c, const T d, const T x) {
-  return ((x + b) * x + c) * x + d;
-}
+void ComputeRealSolutionOfQuadraticEquation(T b, const T c, T* solutions,
+                                            size_t* num_solutions,
+                                            const T D_thr = 1e-14) {
+  // ref http://www.math.twcu.ac.jp/ogita/lec/na_basic.pdf
+  // x^2  + b x + c =  0;
+  //     |
+  //     v
+  // x^2 + 2b x + c =  0;
+  //
+  b *= T(0.5);
 
-template <typename T = double>
-T EvaluateQuaricFunction(const T b, const T c, const T d, const T e,
-                         const T x) {
-  return (((x + b) * x + c) * x + d) * x + e;
-}
-
-template <typename T = double>
-inline void ComputeRealSolutionOfQuadraticEquation(const T b, const T c,
-                                                   T* solutions,
-                                                   size_t* num_solutions,
-                                                   const T D_thr = 1e-14) {
-  const T D = b * b - T(4.0) * c;
+  const T D = b * b - c;
 
   if (D > D_thr) {
-    *num_solutions = 2;
-    solutions[0]   = (-b - sqrt(D)) * T(0.5);
-    solutions[1]   = (-b + sqrt(D)) * T(0.5);
+    *num_solutions        = 2;
+    const T sqD           = sqrt(D);
+    const int signbit_b   = std::signbit(b);  // if b >= 0 => 0 else b < 0 => 1
+    const T sign_b        = signbit_b ? T(-1.0) : T(1.0);
+    solutions[signbit_b]  = (-b - sign_b * sqD);
+    solutions[!signbit_b] = c / solutions[signbit_b];
   } else if (D > -D_thr) {
     *num_solutions = 1;
-    solutions[0]   = -b * T(0.5);
+    solutions[0]   = -b;
   } else {
     *num_solutions = 0;
   }
 }
 
 template <typename T = double>
-inline std::optional<T> ComputeOneOfRealNonNegativeSolutionOfCubicEquation(
-    T b, const T c, const T d, T D_thr = 1e-14) {
+void ComputeOneOfRealNonNegativeSolutionOfCubicEquation(T b, const T c,
+                                                        const T d, T D_thr,
+                                                        T* solutoin,
+                                                        bool* find_root) {
   // x^3 + b x^2  + c x + d =  0;
   //             |
   //             v
@@ -89,19 +120,9 @@ inline std::optional<T> ComputeOneOfRealNonNegativeSolutionOfCubicEquation(
 
   T x_candidate = T(-1.0);
   if (D < -D_thr) {
-    assert(p > T(0.0));
-    const T sq_p_2        = sqrt(p /* FIXME */) * T(2);
-    const T theta         = acos(q * std::pow(p, -T(3) / T(2)));
-    constexpr T kPi2      = T(2.0 * 3.141592653589793238462643383279);
-    constexpr T kPi4      = T(4.0 * 3.141592653589793238462643383279);
-    constexpr T three_div = T(1) / T(3);
-
-    // TODO SIMD
-    const T x0 = sq_p_2 * cos(theta * three_div) - b;
-    const T x1 = sq_p_2 * cos((theta + kPi2) * three_div) - b;
-    const T x2 = sq_p_2 * cos((theta + kPi4) * three_div) - b;
-
-    x_candidate = std::max({x0, x1, x2});
+    assert(p > 0.0);
+    // 他の2つの実数解よりこの解のほうが大きい
+    x_candidate = T(2) * sqrt(p) * cos(acos(q * sqrt(T(1) / p3)) / T(3)) - b;
 
   } else {
     const T sqD = (D < D_thr ? T(0.0) : sqrt(D));
@@ -121,12 +142,16 @@ inline std::optional<T> ComputeOneOfRealNonNegativeSolutionOfCubicEquation(
       x_candidate = y1 * T(-0.5) - b;
     }
   }
-  return std::signbit(x_candidate) ? std::nullopt
-                                   : std::optional<T>(x_candidate);
+  if (std::signbit(x_candidate)) {
+    *find_root = false;
+  } else {
+    *solutoin  = x_candidate;
+    *find_root = true;
+  }
 }
 
 template <typename T = double>
-inline void ComputeRealSolutionOfQuarticEquation(
+void ComputeRealSolutionOfQuarticEquation(
     T b, const T c, const T d, const T e, T solutions[4], size_t* num_solutions,
     const T D_thr = 1e-14, const T biquadratic_equation_thr = 1e-6,
     const T multiple_solution_thr = 1e-14) {
@@ -139,7 +164,6 @@ inline void ComputeRealSolutionOfQuarticEquation(
   const T r = e - d * b + c * b2 - T(3) * b2 * b2;
 
   if (abs(q) < biquadratic_equation_thr) {
-    // printf("aaa\n");
     T quadratic_equation_solutions[2];
     size_t num_quadratic_equation_solutions;
     ComputeRealSolutionOfQuadraticEquation(p, r, quadratic_equation_solutions,
@@ -169,25 +193,25 @@ inline void ComputeRealSolutionOfQuarticEquation(
       }
     }
   } else {
-    // printf("bbb\n");
-    const std::optional<T> u_op =
-        ComputeOneOfRealNonNegativeSolutionOfCubicEquation(
-            T(2) * p, (p * p - T(4) * r), -q * q, D_thr);
+    T u;
+    bool find_root = 0;
+    const T c1     = T(2) * p;
+    const T c2     = p * p - T(4) * r;
+    const T c3     = -q * q;
 
-    if (!u_op) {
+    ComputeOneOfRealNonNegativeSolutionOfCubicEquation(c1, c2, c3, D_thr, &u,
+                                                       &find_root);
+    if (!find_root) {
       *num_solutions = 0;
       return;
     }
-    const T u = u_op.value();
-    // printf("u %le\n", u);
-    // printf("cubic equation error %e\n",
-    //       EvaluateCubicFunction(T(2) * p, (p * p - T(4) * r), -q * q, u));
+
+    RefineCubicEquationSolution(c1, c2, c3, &u);
 
     const T sq_u      = sqrt(u);
     const T alpha     = (p + u) * T(0.5);
     const T beta      = (q * T(0.5)) / u;
     const T sq_u_beta = sq_u * beta;
-    // printf("sq_u_beta %le\n", sq_u_beta);
 
     size_t num_quadratic_equation_solutions0;
 
@@ -230,6 +254,23 @@ inline void ComputeRealSolutionOfQuarticEquation(
   }
 }
 
+template <typename T = double>
+T EvaluateQuarticFunction(const T b, const T c, const T d, const T e,
+                          const T x) {
+  const T x_sq = x * x;
+
+  T sum = T(0), remain = T(0);
+  T diff, tmp;
+
+  KAHAN_ADD(sum, x_sq * x_sq);
+  KAHAN_ADD(sum, b * x * x_sq);
+  KAHAN_ADD(sum, c * x_sq);
+  KAHAN_ADD(sum, d * x);
+  KAHAN_ADD_LAST(sum, e);
+
+  return sum;
+}
+
 static bool Test(const double b, const double c, const double d,
                  const double e) {
   double solutions[4];
@@ -241,26 +282,24 @@ static bool Test(const double b, const double c, const double d,
     return false;
   }
 
-  // 現状 qが小さいと精度が悪くなる
   const double b4 = b * 0.25;
   const double q  = d - 2.0 * c * b4 + 8.0 * b4 * b4 * b4;
 
-  // qが小さいときは甘くする
-  const double thr = (abs(q) < 1e-2 ? 5e-2 : 1e-7);
+  const double thr = 1e-12;
 
   // TODO newton法でエラーチェック
 
   for (size_t i = 0; i < num_solutions; ++i) {
     if (std::isfinite(solutions[i]) &&
-        abs(EvaluateQuaricFunction(b, c, d, e, solutions[i])) > thr) {
+        abs(EvaluateQuarticFunction(b, c, d, e, solutions[i])) > thr) {
       printf("error %e\n",
-             abs(EvaluateQuaricFunction(b, c, d, e, solutions[i])));
+             abs(EvaluateQuarticFunction(b, c, d, e, solutions[i])));
       printf("x^4 + %f x^3 + %f x^2 + %f x + %f\n", b, c, d, e);
       printf("num solution %lu\n", num_solutions);
       for (size_t j = 0; j < num_solutions; ++j) {
         printf("x_%lu = %f\n", j, solutions[j]);
       }
-      printf("q = %e\n", d - 2.0 * c * b4 + 8.0 * b4 * b4 * b4);
+      printf("q = %e\n", q);
       return false;
     }
   }
@@ -269,41 +308,61 @@ static bool Test(const double b, const double c, const double d,
 
 static long Benchmark(const double b, const double c, const double d,
                       const double e) {
-  std::chrono::system_clock::time_point start, end;
-
   double solutions[4];
   size_t num_solutions;
 
-  start = std::chrono::high_resolution_clock::now();
+  struct timespec start_ts, end_ts;
+
+  timespec_get(&start_ts, TIME_UTC);
+
   ComputeRealSolutionOfQuarticEquation(b, c, d, e, solutions, &num_solutions);
-  end = std::chrono::high_resolution_clock::now();
 
-  const long com_time =
-      std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
-
-  return com_time;
+  timespec_get(&end_ts, TIME_UTC);
+  return (long)end_ts.tv_sec * 1000000000 + end_ts.tv_nsec -
+         start_ts.tv_sec * 1000000000 - start_ts.tv_nsec;
 }
 
-static void TryAndOutput(const double b, const double c, const double d,
-                         const double e) {
+static bool TestAndOutput(const double b, const double c, const double d,
+                          const double e, const size_t gt_num_solutions,
+                          double gt_solutions[]) {
   double solutions[4];
   size_t num_solutions;
 
-  ComputeRealSolutionOfQuarticEquation(b, c, d, e, solutions, &num_solutions);
+  ComputeRealSolutionOfQuarticEquation(
+      b, c, d, e, solutions, &num_solutions, /*D_thr*/ 1e-14,
+      /*biquadratic_equation_thr*/ 1e-14, /*multiple_solution_thr*/ 1e-14);
 
   std::sort(solutions, solutions + num_solutions);
 
   printf("number of soluton: %lu\n", num_solutions);
   for (size_t i = 0; i < num_solutions; ++i) {
-    printf("x_%lu = %f, f(x) = %e\n", i + 1, solutions[i],
-           EvaluateQuaricFunction(b, c, d, e, solutions[i]));
+    double y = EvaluateQuarticFunction(b, c, d, e, solutions[i]);
+    printf("x_%lu = %f, f(x) = %.15e\n", i + 1, solutions[i], y);
+  }
+  if (num_solutions != gt_num_solutions) {
+    printf("the number of solutions is wrong. (%lu (result) vs %lu (gt)\n",
+           num_solutions, gt_num_solutions);
+    return 0;
+  }
+
+  std::sort(gt_solutions, gt_solutions + gt_num_solutions);
+
+  const double thr = 1e-15;
+  for (size_t i = 0; i < num_solutions; ++i) {
+    if (fabs(solutions[i] - gt_solutions[i]) > thr) {
+      printf("the solution is wrong. (%.15f (result) vs %.15f (gt))\n",
+             solutions[i], gt_solutions[i]);
+      return 0;
+    }
   }
   printf("\n");
+
+  return 1;
 }
 
 int main(void) {
   size_t num_test_itr  = 10000000;
-  size_t num_bench_itr = 1000000;
+  size_t num_bench_itr = 10000000;
 
 #if 0
    std::random_device seed_gen;
@@ -323,6 +382,7 @@ int main(void) {
       return 1;
     }
   }
+  printf("Pass Test\n");
 
   long sum_com_time = 0.0;
   for (size_t itr_cnt = 0; itr_cnt < num_bench_itr; ++itr_cnt) {
@@ -343,7 +403,12 @@ int main(void) {
     const double d = 0;
     const double e = 4;
 
-    TryAndOutput(b, c, d, e);
+    const size_t gt_num_solutions = 4;
+    double gt_solutions[]         = {-2, -1, 1, 2};
+
+    if (!TestAndOutput(b, c, d, e, gt_num_solutions, gt_solutions)) {
+      return 1;
+    }
   }
   {
     // biquadratic equation cases
@@ -352,7 +417,12 @@ int main(void) {
     const double d = 0;
     const double e = -6;
 
-    TryAndOutput(b, c, d, e);
+    const size_t gt_num_solutions = 2;
+    double gt_solutions[]         = {-sqrt(2.0), sqrt(2.0)};
+
+    if (!TestAndOutput(b, c, d, e, gt_num_solutions, gt_solutions)) {
+      return 1;
+    }
   }
   {
     // biquadratic equation cases
@@ -361,7 +431,12 @@ int main(void) {
     const double d = 0;
     const double e = -6;
 
-    TryAndOutput(b, c, d, e);
+    const size_t gt_num_solutions = 2;
+    double gt_solutions[]         = {-sqrt(3.0), sqrt(3.0)};
+
+    if (!TestAndOutput(b, c, d, e, gt_num_solutions, gt_solutions)) {
+      return 1;
+    }
   }
   {
     // biquadratic equation cases
@@ -370,7 +445,9 @@ int main(void) {
     const double d = 0;
     const double e = 4;
 
-    TryAndOutput(b, c, d, e);
+    if (!TestAndOutput(b, c, d, e, 0, nullptr)) {
+      return 1;
+    }
   }
   {
     // biquadratic equation cases
@@ -380,7 +457,12 @@ int main(void) {
     const double d = -50;
     const double e = 24;
 
-    TryAndOutput(b, c, d, e);
+    const size_t gt_num_solutions = 4;
+    double gt_solutions[]         = {1, 2, 3, 4};
+
+    if (!TestAndOutput(b, c, d, e, gt_num_solutions, gt_solutions)) {
+      return 1;
+    }
   }
 
   {
@@ -390,17 +472,27 @@ int main(void) {
     const double d = -10;
     const double e = +24;
 
-    TryAndOutput(b, c, d, e);
+    const size_t gt_num_solutions = 4;
+    double gt_solutions[]         = {-3, -2, 1, 4};
+
+    if (!TestAndOutput(b, c, d, e, gt_num_solutions, gt_solutions)) {
+      return 1;
+    }
   }
 
   {
-    // (x - 1)(x + 2)(x + 3)(x + 3)
+    // (x - 1)(x + 2)(x + 3)^2
     const double b = 7;
     const double c = 13;
     const double d = -3;
     const double e = -18;
 
-    TryAndOutput(b, c, d, e);
+    const size_t gt_num_solutions = 3;
+    double gt_solutions[]         = {-3, -2, 1};
+
+    if (!TestAndOutput(b, c, d, e, gt_num_solutions, gt_solutions)) {
+      return 1;
+    }
   }
 
   {
@@ -410,7 +502,12 @@ int main(void) {
     const double d = -8;
     const double e = -3;
 
-    TryAndOutput(b, c, d, e);
+    const size_t gt_num_solutions = 2;
+    double gt_solutions[]         = {-1, 3};
+
+    if (!TestAndOutput(b, c, d, e, gt_num_solutions, gt_solutions)) {
+      return 1;
+    }
   }
 
   {
@@ -420,7 +517,12 @@ int main(void) {
     const double d = 12;
     const double e = 9;
 
-    TryAndOutput(b, c, d, e);
+    const size_t gt_num_solutions = 2;
+    double gt_solutions[]         = {-1, 3};
+
+    if (!TestAndOutput(b, c, d, e, gt_num_solutions, gt_solutions)) {
+      return 1;
+    }
   }
 
   {
@@ -430,7 +532,12 @@ int main(void) {
     const double d = -500;
     const double e = 625;
 
-    TryAndOutput(b, c, d, e);
+    const size_t gt_num_solutions = 1;
+    double gt_solutions[]         = {5};
+
+    if (!TestAndOutput(b, c, d, e, gt_num_solutions, gt_solutions)) {
+      return 1;
+    }
   }
 
   {
@@ -440,7 +547,12 @@ int main(void) {
     const double d = -4;
     const double e = 20;
 
-    TryAndOutput(b, c, d, e);
+    const size_t gt_num_solutions = 1;
+    double gt_solutions[]         = {2};
+
+    if (!TestAndOutput(b, c, d, e, gt_num_solutions, gt_solutions)) {
+      return 1;
+    }
   }
 
   {
@@ -450,7 +562,9 @@ int main(void) {
     const double d = 30;
     const double e = 50;
 
-    TryAndOutput(b, c, d, e);
+    if (!TestAndOutput(b, c, d, e, 0, nullptr)) {
+      return 1;
+    }
   }
 
   return 0;
