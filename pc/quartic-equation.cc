@@ -372,7 +372,7 @@ int main(void) {
 #endif
 
   for (size_t itr_cnt = 0; itr_cnt < num_test_itr; ++itr_cnt) {
-    std::uniform_real_distribution<double> dist(-10.0, 10.0);
+    std::uniform_real_distribution<double> dist(-5.0, 5.0);
     const double b = dist(engine);
     const double c = dist(engine);
     const double d = dist(engine);
@@ -386,7 +386,7 @@ int main(void) {
 
   long sum_com_time = 0.0;
   for (size_t itr_cnt = 0; itr_cnt < num_bench_itr; ++itr_cnt) {
-    std::uniform_real_distribution<double> dist(-10.0,10.0);
+    std::uniform_real_distribution<double> dist(-5.0,5.0);
     const double b = dist(engine);
     const double c = dist(engine);
     const double d = dist(engine);

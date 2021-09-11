@@ -1,7 +1,7 @@
 name: build-and-test
 on: [push]
 jobs:
-  build-and-test:
+  build-and-test-on-linux:
     runs-on: ubuntu-20.04
     steps:
       - name: checkout
@@ -36,3 +36,35 @@ jobs:
           cd cmake-build-release
           ./c-quartic-equation
           ./quartic-equation
+  build-and-test-on-windows:
+    runs-on: windows-2022
+        steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # https://itneko.com/actions-checkout/
+          #token: ${{ secrets.SUB_MODULE_TOKEN }}
+          submodules: true
+      - name: install library
+        run: |
+          C:\vcpkg\vcpkg.exe update
+          C:\vcpkg\vcpkg.exe install eigen3:x64-windows
+          C:\vcpkg\vcpkg.exe install glog:x64-windows
+          C:\vcpkg\vcpkg.exe install glew:x64-windows
+          C:\vcpkg\vcpkg.exe install glfw3:x64-windows
+      - name: build
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: win64
+        run: |
+          cmake  -G "NMake Makefiles" -Bcmake-build-release -H. `
+                 -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake `
+                 -DCMAKE_EXPORT_COMPILE_COMMANDS=1 `
+                 -DCMAKE_BUILD_TYPE=Release `
+                 -DBUILD_WITH_MARCH_NATIVE=OFF `
+                 -DUSE_CCACHE=OFF `
+                 -DUSE_CPP20=ON `
+                 -DUSE_SANITIZER=OFF `
+                 -DUSE_STACK_TRACE_LOGGER=ON
+          cd cmake-build-release
+          nmake -j2
