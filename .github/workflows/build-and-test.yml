@@ -38,7 +38,7 @@ jobs:
           ./quartic-equation
   build-and-test-on-windows:
     runs-on: windows-2022
-        steps:
+    steps:
       - name: checkout
         uses: actions/checkout@v2
         with:
