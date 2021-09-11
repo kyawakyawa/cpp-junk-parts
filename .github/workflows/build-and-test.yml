@@ -56,9 +56,6 @@ jobs:
           C:\vcpkg\vcpkg.exe install glew:x64-windows
           C:\vcpkg\vcpkg.exe install glfw3:x64-windows
       - name: build
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: win64
         run: |
           cmake  -G "NMake Makefiles" -Bcmake-build-release -H. `
                  -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake `
