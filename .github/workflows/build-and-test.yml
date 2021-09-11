@@ -37,7 +37,7 @@ jobs:
           ./c-quartic-equation
           ./quartic-equation
   build-and-test-on-windows:
-    runs-on: windows-2022
+    runs-on: windows-latest
     steps:
       - name: checkout
         uses: actions/checkout@v2
