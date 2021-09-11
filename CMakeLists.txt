@@ -68,11 +68,14 @@ endif(MSVC)
 # find package and check third party
 # - thread
 # - eigen
+# - GLEW
+# - GLFW3
 # - json
 # - StaticJSON + rapidjson
 # - spdlog
 # - pcg-cpp
 # - oneTBB
+# - OpenGL
 # - google glog (optional)
 
 set(GIT_SUBMODULE_UPDATE_COMMAND "git submodule update --init --recursive --depth 1")
@@ -83,11 +86,11 @@ find_package(Threads REQUIRED)
 # Eigen
 find_package(Eigen3 3.3 REQUIRED)
 
-# GLFW3
-find_package( glfw3 REQUIRED )
-
 # GLEW
 find_package( GLEW REQUIRED )
+
+# GLFW3
+find_package( glfw3 REQUIRED )
 
 # json
 if (NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/json/CMakeLists.txt")
@@ -111,7 +114,7 @@ if (NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/StaticJSON/src/staticjson.cpp"
 endif()
 
 set(STATICJSON_SOURCE_FILES "${PROJECT_SOURCE_DIR}/third_party/StaticJSON/src/staticjson.cpp")
-add_library(staticjson SHARED ${STATICJSON_SOURCE_FILES})
+add_library(staticjson STATIC ${STATICJSON_SOURCE_FILES})
 
 target_include_directories(staticjson PUBLIC ${RAPIDJSON_INCLUDE_DIR})
 target_include_directories(staticjson PUBLIC ${PROJECT_SOURCE_DIR}/third_party/StaticJSON/include)
@@ -125,7 +128,9 @@ target_compile_features(staticjson
                         PRIVATE cxx_std_11)   
 
 # spdlog
-set(SPDLOG_BUILD_SHARED ON CACHE BOOL "Build libspdlog shared library")
+if (NOT MSVC)
+    set(SPDLOG_BUILD_SHARED ON CACHE BOOL "Build libspdlog shared library")
+endif (NOT MSVC)
 add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/spdlog)
 
 # google glog
@@ -151,13 +156,18 @@ set(PCG_CPP_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/third_party/pcg-cpp/include)
 # tbb_build(TBB_ROOT ${tbb_root} CONFIG_DIR TBB_DIR)
 # find_package(TBB REQUIRED)
 
-if (NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/oneTBB/cmake/TBBBuild.cmake")
-  message(FATAL_ERROR "\n[error] oneTBB was not found!\n"
-      "Please execute the command\n\"${GIT_SUBMODULE_UPDATE_COMMAND}\"")
-endif()
-include(${PROJECT_SOURCE_DIR}/third_party/oneTBB/cmake/TBBBuild.cmake)
-tbb_build(TBB_ROOT ${PROJECT_SOURCE_DIR}/third_party/oneTBB CONFIG_DIR TBB_DIR)
-find_package(TBB REQUIRED)
+if (NOT MSVC)
+  if (NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/oneTBB/cmake/TBBBuild.cmake"  )
+    message(FATAL_ERROR "\n[error] oneTBB was not found!\n"
+        "Please execute the command\n\"${GIT_SUBMODULE_UPDATE_COMMAND}\"")  
+  endif()
+  include(${PROJECT_SOURCE_DIR}/third_party/oneTBB/cmake/TBBBuild.cmake)
+  tbb_build(TBB_ROOT ${PROJECT_SOURCE_DIR}/third_party/oneTBB CONFIG_DIR TBB_DIR)
+  find_package(TBB REQUIRED)
+endif (NOT MSVC)
+
+# OpenGL
+find_package(OpenGL REQUIRED)
 
 # build selection
 add_subdirectory(pc)

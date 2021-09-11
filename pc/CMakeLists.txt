@@ -24,11 +24,11 @@ add_executable(cubic-equation ./cubic-equation.cc)
 list(APPEND EXECUTABLE_TARGETS cubic-equation)
 
 add_executable(glfw-shader ./glfw-shader.cc)
-target_link_libraries(glfw-shader PRIVATE GL GLEW glfw)
+target_link_libraries(glfw-shader PRIVATE OpenGL::GL ${GLEW_LIBRARIES} glfw)
 list(APPEND EXECUTABLE_TARGETS glfw-shader)
 
 add_executable(glfw-texture ./glfw-texture.cc)
-target_link_libraries(glfw-texture PRIVATE GL GLEW glfw)
+target_link_libraries(glfw-texture PRIVATE OpenGL::GL ${GLEW_LIBRARIES} glfw)
 list(APPEND EXECUTABLE_TARGETS glfw-texture)
 
 add_executable(load_messagepack load_messagepack.cc)
@@ -36,16 +36,20 @@ target_link_libraries(load_messagepack PRIVATE nlohmann_json::nlohmann_json)
 list(APPEND EXECUTABLE_TARGETS load_messagepack)
 
 add_executable(parallelism-ts-test ./parallelism-ts-test.cc)
-target_link_libraries(parallelism-ts-test PRIVATE ${TBB_IMPORTED_TARGETS})
+if (NOT MSVC)
+    target_link_libraries(parallelism-ts-test PRIVATE ${TBB_IMPORTED_TARGETS})
+endif (NOT MSVC)
 list(APPEND EXECUTABLE_TARGETS parallelism-ts-test)
 
 add_executable(parallel-examples ./parallel-examples.cc)
-target_link_libraries(parallel-examples PRIVATE Threads::Threads ${TBB_IMPORTED_TARGETS})
+target_link_libraries(parallel-examples PRIVATE Threads::Threads)
 list(APPEND EXECUTABLE_TARGETS parallel-examples)
 
 add_executable(pcg32-test ./pcg32-test.cc)
 target_include_directories(pcg32-test PRIVATE ${PCG_CPP_INCLUDE_DIR})
-target_compile_options(pcg32-test PRIVATE -Wno-date-time)
+if (NOT MSVC)
+    target_compile_options(pcg32-test PRIVATE -Wno-date-time)
+endif(NOT MSVC)
 list(APPEND EXECUTABLE_TARGETS pcg32-test)
 
 if (USE_CPP20)
@@ -146,6 +150,8 @@ foreach(C_PROGRAM IN LISTS C_PROGRAMS)
 
     target_include_directories(${C_PROGRAM} PRIVATE ${PROJECT_SOURCE_DIR}/inc)
 
-    target_link_libraries(${C_PROGRAM} PRIVATE m)
+    if (NOT MSVC)
+        target_link_libraries(${C_PROGRAM} PRIVATE m)
+    endif (NOT MSVC)
     
 endforeach()

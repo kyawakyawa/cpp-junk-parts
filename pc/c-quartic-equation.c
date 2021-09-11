@@ -161,9 +161,9 @@ static void compute_real_solution_of_quadratic_equation(double b,
   if (D > D_thr) {
     *num_solutions        = 2;
     const double sqD      = sqrt(D);
-    const int signbit_b   = signbit(b);  // if b >= 0 => 0 else b < 0 => 1
+    const int signbit_b   = (signbit(b) == 0 ? 0 : 1);  // if b >= 0 => 0 else b < 0 => 1
     const double sign_b   = signbit_b ? -1.0 : 1.0;
-    solutions[signbit_b]  = (-b - sign_b * sqD);
+    solutions[signbit_b] = (-b - sign_b * sqD);
     solutions[!signbit_b] = c / solutions[signbit_b];
   } else if (D > -D_thr) {
     *num_solutions = 1;
@@ -414,7 +414,7 @@ static _Bool test_and_output(const double b, const double c, const double d,
   return 1;
 }
 
-static long benchmark(const double b, const double c, const double d,
+static uint64_t benchmark(const double b, const double c, const double d,
                       const double e) {
   double solutions[4];
   size_t num_solutions;
@@ -427,8 +427,8 @@ static long benchmark(const double b, const double c, const double d,
       b, c, d, e, solutions, &num_solutions, 1e-14, 1e-14, 1e-14);
 
   timespec_get(&end_ts, TIME_UTC);
-  return (long)end_ts.tv_sec * 1000000000 + end_ts.tv_nsec -
-         start_ts.tv_sec * 1000000000 - start_ts.tv_nsec;
+  return (uint64_t)end_ts.tv_sec * 1000000000 + (uint64_t)end_ts.tv_nsec -
+         (uint64_t)start_ts.tv_sec * 1000000000 - (uint64_t)start_ts.tv_nsec;
 }
 
 static uint64_t xor128(void) {
@@ -458,7 +458,7 @@ int main(void) {
   }
   printf("Pass Test\n");
 
-  long sum_com_time = 0.0;
+  uint64_t sum_com_time = 0.0;
   for (size_t itr_cnt = 0; itr_cnt < num_bench_itr; ++itr_cnt) {
     const double b = (double)(xor128()) / (double)(UINT64_MAX - 1) * 10;
     const double c = (double)(xor128()) / (double)(UINT64_MAX - 1) * 10;

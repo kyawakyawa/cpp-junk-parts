@@ -147,7 +147,7 @@ static bool Test(const double b, const double c, const double d) {
 }
 
 static long Benchmark(const double b, const double c, const double d) {
-  std::chrono::system_clock::time_point start, end;
+  std::chrono::high_resolution_clock::time_point start, end;
 
   double solutions[3];
   size_t num_solutions;
