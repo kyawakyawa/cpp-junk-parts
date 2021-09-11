@@ -13,7 +13,8 @@ jobs:
       - name: install library
         run: |
           vcpkg install eigen3:x64-linux
-          sudo apt install -y libglfw3 libglfw3-dev libglew-dev
+          vcpkg install glfw3:x64-linux
+          vcpkg install glew:x64-linux
         shell: bash
       - name: build
         run: |

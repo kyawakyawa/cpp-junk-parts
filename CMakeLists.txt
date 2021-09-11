@@ -83,6 +83,12 @@ find_package(Threads REQUIRED)
 # Eigen
 find_package(Eigen3 3.3 REQUIRED)
 
+# GLFW3
+find_package( glfw3 REQUIRED )
+
+# GLEW
+find_package( GLEW REQUIRED )
+
 # json
 if (NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/json/CMakeLists.txt")
     message(FATAL_ERROR "[error] json was not found!\n"
