@@ -12,6 +12,7 @@ jobs:
           submodules: true
       - name: install library
         run: |
+          vcpkg update
           vcpkg install eigen3:x64-linux
           vcpkg install glfw3:x64-linux
           vcpkg install glew:x64-linux
