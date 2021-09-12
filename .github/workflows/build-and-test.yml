@@ -61,12 +61,11 @@ jobs:
         shell: powershell
         run: |
           # msbuild -version
-          $msbuildPlatform = "x64"
+          # $msbuildPlatform = "x64"
           $buildDirectory = "build_win_x64"
           mkdir $buildDirectory -Force -ErrorAction Stop | Out-Null
           cd $buildDirectory
           cmake  -G Ninja `
-                 -A $msbuildPlatform `
                  -D CMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake `
                  -D CMAKE_EXPORT_COMPILE_COMMANDS=1 `
                  -D CMAKE_BUILD_TYPE=Release `
