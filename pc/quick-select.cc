@@ -52,7 +52,7 @@ static std::vector<int> GenerateRandomVector(const size_t n) {
 //  TODO 長さ0の時
 static int MedianWithSort(const std::vector<int> &input) {
   const size_t n = input.size();
-  auto v         = input;
+  auto v = input;
   std::sort(v.begin(), v.end());
   return v[(n - 1) / 2];
 }
@@ -64,7 +64,7 @@ static int MedianWithQuickSelect(
     const std::vector<int> &input,
     SelectionMethod sm = SelectionMethod::Randomized) {
   const size_t n = input.size();
-  auto v         = input;
+  auto v = input;
 
   const size_t m_id = (n - 1) / 2;
 
@@ -106,8 +106,8 @@ static int MedianWithQuickSelect(
 }
 
 static int NthElement(const std::vector<int> &input) {
-  auto v            = input;
-  const size_t n    = v.size();
+  auto v = input;
+  const size_t n = v.size();
   const size_t m_id = (n - 1) / 2;
   std::nth_element(v.begin(), v.begin() + long(m_id), v.end());
   return v[m_id];
@@ -127,8 +127,8 @@ static void Test(const size_t n, const bool output = true) {
     std::cout << "nth_element : " << NthElement(a) << std::endl;
   }
 
-  int s   = MedianWithSort(a);
-  int q   = MedianWithQuickSelect(a);
+  int s = MedianWithSort(a);
+  int q = MedianWithQuickSelect(a);
   int nth = MedianWithQuickSelect(a);
 
   if (s != q || q != nth || s != nth) {
@@ -145,7 +145,7 @@ int main(int argc, char **argv) {
   (void)argc;
   (void)argv;
 #endif
-  size_t n  = 10;
+  size_t n = 10;
   size_t it = 10;
 
   for (size_t i = 0; i < it; ++i) {

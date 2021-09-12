@@ -38,7 +38,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   google::InstallFailureSignalHandler();
 #endif
 
-  const size_t array_size    = (1 << 20);
+  const size_t array_size = (1 << 20);
   const size_t num_iteration = 1000;
 
   std::vector<int> vec(array_size);

@@ -53,11 +53,12 @@ int main() {
     _v = dist(engine);
   }
 
-  std::chrono::system_clock::time_point start_function, end_function;
+  std::chrono::system_clock::time_point start_function;
+  std::chrono::system_clock::time_point end_function;
   double elapsed_function;
   {
     std::vector<double> _v = v;
-    start_function         = std::chrono::system_clock::now();
+    start_function = std::chrono::system_clock::now();
     sort(_v.begin(), _v.end(),
          std::bind(cmp_function, 100.0, std::placeholders::_1,
                    std::placeholders::_2));
@@ -68,11 +69,12 @@ int main() {
                    .count());
   }
 
-  std::chrono::system_clock::time_point start_functor, end_functor;
+  std::chrono::system_clock::time_point start_functor;
+  std::chrono::system_clock::time_point end_functor;
   double elapsed_functor;
   {
     std::vector<double> _v = v;
-    start_functor          = std::chrono::system_clock::now();
+    start_functor = std::chrono::system_clock::now();
     sort(_v.begin(), _v.end(),
          std::bind(cmp_functor, 100.0, std::placeholders::_1,
                    std::placeholders::_2));
@@ -83,11 +85,12 @@ int main() {
                    .count());
   }
 
-  std::chrono::system_clock::time_point start_lambda, end_lambda;
+  std::chrono::system_clock::time_point start_lambda;
+  std::chrono::system_clock::time_point end_lambda;
   double elapsed_lambda;
   {
     std::vector<double> _v = v;
-    const auto cmp_lambda  = [](double dummy, double x, double y) {
+    const auto cmp_lambda = [](double dummy, double x, double y) {
       return x + dummy < y + dummy;
     };
     start_lambda = std::chrono::system_clock::now();

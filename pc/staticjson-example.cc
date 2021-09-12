@@ -42,7 +42,7 @@ IGNORE_STRICT_WARNING_PUSH
 IGNORE_STRICT_WARNING_POP
 
 struct A {
-  int hoge        = 0;
+  int hoge = 0;
   std::string str = "";
 };
 

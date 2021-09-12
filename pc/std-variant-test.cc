@@ -26,11 +26,11 @@ SOFTWARE.
 #include <variant>
 
 class A {
-public:
+ public:
   A(void) = default;
   ~A(void) { std::cout << "destruct class A" << std::endl; }
-  A(A& a)    = default;
-  A(A&& a)   = default;
+  A(A& a) = default;
+  A(A&& a) = default;
   A& operator=(A& a) = default;
   A& operator=(A&& a) = default;
 
@@ -40,16 +40,16 @@ public:
 
   friend struct PrintVisitor;
 
-private:
+ private:
   std::string msg = "class A";
 };
 
 class B {
-public:
+ public:
   B(void) = default;
   ~B(void) { std::cout << "destruct class B" << std::endl; }
-  B(B& a)    = default;
-  B(B&& a)   = default;
+  B(B& a) = default;
+  B(B&& a) = default;
   B& operator=(B& b) = default;
   B& operator=(B&& b) = default;
 
@@ -59,7 +59,7 @@ public:
 
   friend struct PrintVisitor;
 
-private:
+ private:
   std::string msg = "class B";
 };
 

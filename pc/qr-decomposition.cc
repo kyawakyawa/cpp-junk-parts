@@ -39,7 +39,7 @@ template <typename Real, int N>
 Eigen::Matrix<Real, N, N> HouseholderTransformation(
     const Eigen::Matrix<Real, N, 1>& x, const Eigen::Matrix<Real, N, 1>& y) {
   static_assert(N >= 1);
-  const auto aux                    = x - y;
+  const auto aux = x - y;
   const Eigen::Matrix<Real, N, 1> u = aux.normalized();
 
   return Eigen::Matrix<Real, N, N>::Identity() - 2 * u * u.transpose();
@@ -50,7 +50,7 @@ Eigen::Matrix<Real, Eigen::Dynamic, Eigen::Dynamic> HouseholderTransformation(
     const Eigen::Matrix<Real, Eigen::Dynamic, 1>& x,
     const Eigen::Matrix<Real, Eigen::Dynamic, 1>& y) {
   assert(x.rows() >= 1 && x.rows() == y.rows());
-  const auto aux                                 = x - y;
+  const auto aux = x - y;
   const Eigen::Matrix<Real, Eigen::Dynamic, 1> u = aux.normalized();
 
   return Eigen::Matrix<Real, Eigen::Dynamic, Eigen::Dynamic>::Identity(
@@ -68,7 +68,7 @@ QRDecompositionWithHouseholderTransformation(
 
   for (int k = 0; k < M - 1; ++k) {
     const Real sign = (R(k, k) >= Real(0) ? Real(1) : Real(-1));
-    const int Mmk   = M - k;
+    const int Mmk = M - k;
 
     const Eigen::Matrix<Real, Eigen::Dynamic, 1> x = R.block(k, k, Mmk, 1);
     // グラフィック用途(ローテーションとスケールの分離)の場合、

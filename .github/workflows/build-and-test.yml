@@ -27,7 +27,8 @@ jobs:
                            -DUSE_CCACHE=OFF \
                            -DUSE_CPP20=ON \
                            -DUSE_SANITIZER=OFF \
-                           -DUSE_STACK_TRACE_LOGGER=ON
+                           -DUSE_STACK_TRACE_LOGGER=ON \
+                           -DAPPLY_CLANG_FORMAT=ON
           cd cmake-build-release
           make -j4
       - name: run_test
@@ -72,6 +73,7 @@ jobs:
                  -D USE_CPP20=OFF `
                  -D USE_SANITIZER=OFF `
                  -D USE_STACK_TRACE_LOGGER=ON `
+                 -D APPLY_CLANG_FORMAT=OFF `
                  ..
                   # TODO -D USE_CPP20=ON
           ninja -j2

@@ -10,11 +10,7 @@ option(USE_CPP20 "use c++20" OFF)
 option(USE_SANITIZER "Enable Address/Memory sanitizer to check memory leak etc..." OFF)
 option(USE_STACK_TRACE_LOGGER "Enable automatic stack trace logger of google-glog" OFF)
 
-# build type
-if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-    set(CMAKE_BUILD_TYPE "Release")
-    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
-endif()
+option(APPLY_CLANG_FORMAT "Apply clang format" OFF)
 
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
@@ -42,6 +38,11 @@ else (MSVC)
       message(STATUS "Address/Memory sanitizer: DISABLED")
   endif(USE_SANITIZER)
 endif(MSVC)
+
+# clang format
+if (${APPLY_CLANG_FORMAT})
+  include( ${PROJECT_SOURCE_DIR}/cmake/FormatSourcesWithClangFormat.cmake )
+endif (${APPLY_CLANG_FORMAT})
 
 if (MSVC)
 else (MSVC)

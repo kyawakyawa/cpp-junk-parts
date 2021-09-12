@@ -10,7 +10,8 @@ CC=clang CXX=clang++ cmake -Bcmake-build-debug -H. \
                            -DUSE_CCACHE=ON \
                            -DUSE_CPP20=ON \
                            -DUSE_SANITIZER=ON \
-                           -DUSE_STACK_TRACE_LOGGER=OFF
+                           -DUSE_STACK_TRACE_LOGGER=OFF \
+                           -DAPPLY_CLANG_FORMAT=ON
 
 mv cmake-build-debug/compile_commands.json .
 
@@ -21,4 +22,5 @@ CC=clang CXX=clang++ cmake -Bcmake-build-release -H. \
                            -DUSE_CCACHE=ON \
                            -DUSE_CPP20=ON \
                            -DUSE_SANITIZER=OFF \
-                           -DUSE_STACK_TRACE_LOGGER=OFF
+                           -DUSE_STACK_TRACE_LOGGER=OFF \
+                           -DAPPLY_CLANG_FORMAT=ON

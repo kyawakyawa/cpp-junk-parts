@@ -31,15 +31,15 @@ SOFTWARE.
 #include <random>
 
 #define KAHAN_ADD(sum, add)    \
-  diff   = add - remain;       \
-  tmp    = sum + diff;         \
+  diff = add - remain;         \
+  tmp = sum + diff;            \
   remain = (tmp - sum) - diff; \
-  sum    = tmp
+  sum = tmp
 
 #define KAHAN_ADD_LAST(sum, add) \
   diff = add - remain;           \
-  tmp  = sum + diff;             \
-  sum  = tmp
+  tmp = sum + diff;              \
+  sum = tmp
 
 template <typename T = double>
 void RefineCubicEquationSolution(const T b, const T c, const T d, T* x) {
@@ -81,15 +81,15 @@ void ComputeRealSolutionOfQuadraticEquation(T b, const T c, T* solutions,
   const T D = b * b - c;
 
   if (D > D_thr) {
-    *num_solutions        = 2;
-    const T sqD           = sqrt(D);
-    const int signbit_b   = std::signbit(b);  // if b >= 0 => 0 else b < 0 => 1
-    const T sign_b        = signbit_b ? T(-1.0) : T(1.0);
-    solutions[signbit_b]  = (-b - sign_b * sqD);
+    *num_solutions = 2;
+    const T sqD = sqrt(D);
+    const int signbit_b = std::signbit(b);  // if b >= 0 => 0 else b < 0 => 1
+    const T sign_b = signbit_b ? T(-1.0) : T(1.0);
+    solutions[signbit_b] = (-b - sign_b * sqD);
     solutions[!signbit_b] = c / solutions[signbit_b];
   } else if (D > -D_thr) {
     *num_solutions = 1;
-    solutions[0]   = -b;
+    solutions[0] = -b;
   } else {
     *num_solutions = 0;
   }
@@ -116,7 +116,7 @@ void ComputeOneOfRealNonNegativeSolutionOfCubicEquation(T b, const T c,
   //       where y = x + b
 
   const T p3 = p * p * p;
-  const T D  = q * q - p3;
+  const T D = q * q - p3;
 
   T x_candidate = T(-1.0);
   if (D < -D_thr) {
@@ -145,7 +145,7 @@ void ComputeOneOfRealNonNegativeSolutionOfCubicEquation(T b, const T c,
   if (std::signbit(x_candidate)) {
     *find_root = false;
   } else {
-    *solutoin  = x_candidate;
+    *solutoin = x_candidate;
     *find_root = true;
   }
 }
@@ -173,17 +173,17 @@ void ComputeRealSolutionOfQuarticEquation(
     if (num_quadratic_equation_solutions >= 1) {
       bool zero_flag = false;  // To deal with floating point arithmetic errors.
       if (quadratic_equation_solutions[0] > multiple_solution_thr) {
-        const T sq                    = sqrt(quadratic_equation_solutions[0]);
+        const T sq = sqrt(quadratic_equation_solutions[0]);
         solutions[(*num_solutions)++] = -sq;
         solutions[(*num_solutions)++] = sq;
       } else if (quadratic_equation_solutions[0] > -multiple_solution_thr) {
         solutions[(*num_solutions)++] = T(0);
-        zero_flag                     = true;
+        zero_flag = true;
       }
 
       if (num_quadratic_equation_solutions == 2) {
         if (quadratic_equation_solutions[1] > multiple_solution_thr) {
-          const T sq                    = sqrt(quadratic_equation_solutions[1]);
+          const T sq = sqrt(quadratic_equation_solutions[1]);
           solutions[(*num_solutions)++] = -sq;
           solutions[(*num_solutions)++] = sq;
         } else if (!zero_flag &&
@@ -195,9 +195,9 @@ void ComputeRealSolutionOfQuarticEquation(
   } else {
     T u;
     bool find_root = 0;
-    const T c1     = T(2) * p;
-    const T c2     = p * p - T(4) * r;
-    const T c3     = -q * q;
+    const T c1 = T(2) * p;
+    const T c2 = p * p - T(4) * r;
+    const T c3 = -q * q;
 
     ComputeOneOfRealNonNegativeSolutionOfCubicEquation(c1, c2, c3, D_thr, &u,
                                                        &find_root);
@@ -208,9 +208,9 @@ void ComputeRealSolutionOfQuarticEquation(
 
     RefineCubicEquationSolution(c1, c2, c3, &u);
 
-    const T sq_u      = sqrt(u);
-    const T alpha     = (p + u) * T(0.5);
-    const T beta      = (q * T(0.5)) / u;
+    const T sq_u = sqrt(u);
+    const T alpha = (p + u) * T(0.5);
+    const T beta = (q * T(0.5)) / u;
     const T sq_u_beta = sq_u * beta;
 
     size_t num_quadratic_equation_solutions0;
@@ -283,7 +283,7 @@ static bool Test(const double b, const double c, const double d,
   }
 
   const double b4 = b * 0.25;
-  const double q  = d - 2.0 * c * b4 + 8.0 * b4 * b4 * b4;
+  const double q = d - 2.0 * c * b4 + 8.0 * b4 * b4 * b4;
 
   const double thr = 1e-12;
 
@@ -361,7 +361,7 @@ static bool TestAndOutput(const double b, const double c, const double d,
 }
 
 int main(void) {
-  size_t num_test_itr  = 10000000;
+  size_t num_test_itr = 10000000;
   size_t num_bench_itr = 10000000;
 
 #if 0
@@ -386,7 +386,7 @@ int main(void) {
 
   long sum_com_time = 0.0;
   for (size_t itr_cnt = 0; itr_cnt < num_bench_itr; ++itr_cnt) {
-    std::uniform_real_distribution<double> dist(-5.0,5.0);
+    std::uniform_real_distribution<double> dist(-5.0, 5.0);
     const double b = dist(engine);
     const double c = dist(engine);
     const double d = dist(engine);
@@ -404,7 +404,7 @@ int main(void) {
     const double e = 4;
 
     const size_t gt_num_solutions = 4;
-    double gt_solutions[]         = {-2, -1, 1, 2};
+    double gt_solutions[] = {-2, -1, 1, 2};
 
     if (!TestAndOutput(b, c, d, e, gt_num_solutions, gt_solutions)) {
       return 1;
@@ -418,7 +418,7 @@ int main(void) {
     const double e = -6;
 
     const size_t gt_num_solutions = 2;
-    double gt_solutions[]         = {-sqrt(2.0), sqrt(2.0)};
+    double gt_solutions[] = {-sqrt(2.0), sqrt(2.0)};
 
     if (!TestAndOutput(b, c, d, e, gt_num_solutions, gt_solutions)) {
       return 1;
@@ -432,7 +432,7 @@ int main(void) {
     const double e = -6;
 
     const size_t gt_num_solutions = 2;
-    double gt_solutions[]         = {-sqrt(3.0), sqrt(3.0)};
+    double gt_solutions[] = {-sqrt(3.0), sqrt(3.0)};
 
     if (!TestAndOutput(b, c, d, e, gt_num_solutions, gt_solutions)) {
       return 1;
@@ -458,7 +458,7 @@ int main(void) {
     const double e = 24;
 
     const size_t gt_num_solutions = 4;
-    double gt_solutions[]         = {1, 2, 3, 4};
+    double gt_solutions[] = {1, 2, 3, 4};
 
     if (!TestAndOutput(b, c, d, e, gt_num_solutions, gt_solutions)) {
       return 1;
@@ -473,7 +473,7 @@ int main(void) {
     const double e = +24;
 
     const size_t gt_num_solutions = 4;
-    double gt_solutions[]         = {-3, -2, 1, 4};
+    double gt_solutions[] = {-3, -2, 1, 4};
 
     if (!TestAndOutput(b, c, d, e, gt_num_solutions, gt_solutions)) {
       return 1;
@@ -488,7 +488,7 @@ int main(void) {
     const double e = -18;
 
     const size_t gt_num_solutions = 3;
-    double gt_solutions[]         = {-3, -2, 1};
+    double gt_solutions[] = {-3, -2, 1};
 
     if (!TestAndOutput(b, c, d, e, gt_num_solutions, gt_solutions)) {
       return 1;
@@ -503,7 +503,7 @@ int main(void) {
     const double e = -3;
 
     const size_t gt_num_solutions = 2;
-    double gt_solutions[]         = {-1, 3};
+    double gt_solutions[] = {-1, 3};
 
     if (!TestAndOutput(b, c, d, e, gt_num_solutions, gt_solutions)) {
       return 1;
@@ -518,7 +518,7 @@ int main(void) {
     const double e = 9;
 
     const size_t gt_num_solutions = 2;
-    double gt_solutions[]         = {-1, 3};
+    double gt_solutions[] = {-1, 3};
 
     if (!TestAndOutput(b, c, d, e, gt_num_solutions, gt_solutions)) {
       return 1;
@@ -533,7 +533,7 @@ int main(void) {
     const double e = 625;
 
     const size_t gt_num_solutions = 1;
-    double gt_solutions[]         = {5};
+    double gt_solutions[] = {5};
 
     if (!TestAndOutput(b, c, d, e, gt_num_solutions, gt_solutions)) {
       return 1;
@@ -548,7 +548,7 @@ int main(void) {
     const double e = 20;
 
     const size_t gt_num_solutions = 1;
-    double gt_solutions[]         = {2};
+    double gt_solutions[] = {2};
 
     if (!TestAndOutput(b, c, d, e, gt_num_solutions, gt_solutions)) {
       return 1;

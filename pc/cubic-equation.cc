@@ -37,13 +37,13 @@ T EvaluateCubicFunction(const T b, const T c, const T d, const T x) {
 
 template <typename T = double>
 T NewtonMethodForCubicEquation(const T b, const T c, const T d, T x,
-                               const T thr          = 1e-12,
+                               const T thr = 1e-12,
                                const size_t max_itr = 10000) {
   const T a2 = T(2.0) * b;
   for (size_t itr = 0; itr < max_itr; ++itr) {
     const T x2 = x * x;
 
-    const T f      = x2 * x + b * x2 + c * x + d;
+    const T f = x2 * x + b * x2 + c * x + d;
     const T f_dash = T(3) * x2 + a2 * x + c;
 
     x -= f / f_dash;
@@ -76,7 +76,7 @@ inline void ComputeRealSolutionOfCubicEquation(
   //       where y = x + b
 
   const T p3 = p * p * p;
-  const T D  = q * q - p3;
+  const T D = q * q - p3;
 
   if (D < -D_thr) {
     assert(p > T(0.0));
@@ -86,13 +86,13 @@ inline void ComputeRealSolutionOfCubicEquation(
     solutions[1] = NewtonMethodForCubicEquation(original_b, c, d, -b);
     solutions[2] = NewtonMethodForCubicEquation(original_b, c, d, sq_p_2 - b);
 #else
-    const T theta         = acos(q * std::pow(p, -T(3) / T(2)));
-    constexpr T kPi2      = T(2.0 * 3.141592653589793238462643383279);
-    constexpr T kPi4      = T(4.0 * 3.141592653589793238462643383279);
+    const T theta = acos(q * std::pow(p, -T(3) / T(2)));
+    constexpr T kPi2 = T(2.0 * 3.141592653589793238462643383279);
+    constexpr T kPi4 = T(4.0 * 3.141592653589793238462643383279);
     constexpr T three_div = T(1) / T(3);
-    solutions[0]          = sq_p_2 * cos(theta * three_div) - b;
-    solutions[1]          = sq_p_2 * cos((theta + kPi2) * three_div) - b;
-    solutions[2]          = sq_p_2 * cos((theta + kPi4) * three_div) - b;
+    solutions[0] = sq_p_2 * cos(theta * three_div) - b;
+    solutions[1] = sq_p_2 * cos((theta + kPi2) * three_div) - b;
+    solutions[2] = sq_p_2 * cos((theta + kPi4) * three_div) - b;
 
 #endif
 
@@ -183,7 +183,7 @@ static void TryAndOutput(const double b, const double c, const double d) {
 }
 
 int main(void) {
-  size_t num_test_itr  = 10000000;
+  size_t num_test_itr = 10000000;
   size_t num_bench_itr = 1000000;
 
   std::random_device seed_gen;

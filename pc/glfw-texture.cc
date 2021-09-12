@@ -34,12 +34,12 @@ SOFTWARE.
 
 using namespace std;
 
-const int g_width  = 640;
+const int g_width = 640;
 const int g_height = 480;
 
 static GLuint crateShader() {
   //バーテックスシェーダのコンパイル
-  GLuint vShaderId    = glCreateShader(GL_VERTEX_SHADER);
+  GLuint vShaderId = glCreateShader(GL_VERTEX_SHADER);
   string vertexShader = R"#(
     attribute vec3 position;
     attribute vec2 uv;
@@ -49,12 +49,12 @@ static GLuint crateShader() {
         vuv = uv;
     }
     )#";
-  const char* vs      = vertexShader.c_str();
+  const char* vs = vertexShader.c_str();
   glShaderSource(vShaderId, 1, &vs, nullptr);
   glCompileShader(vShaderId);
 
   //フラグメントシェーダのコンパイル
-  GLuint fShaderId      = glCreateShader(GL_FRAGMENT_SHADER);
+  GLuint fShaderId = glCreateShader(GL_FRAGMENT_SHADER);
   string fragmentShader = R"#(
     varying vec2 vuv;
     uniform sampler2D texture;
@@ -62,7 +62,7 @@ static GLuint crateShader() {
         gl_FragColor = texture2D(texture, vuv);
     }
     )#";
-  const char* fs        = fragmentShader.c_str();
+  const char* fs = fragmentShader.c_str();
   glShaderSource(fShaderId, 1, &fs, nullptr);
   glCompileShader(fShaderId);
 
@@ -157,8 +157,8 @@ int main() {
 
     // 何番目のattribute変数か
     int positionLocation = glGetAttribLocation(programId, "position");
-    int uvLocation       = glGetAttribLocation(programId, "uv");
-    int textureLocation  = glGetUniformLocation(programId, "texture");
+    int uvLocation = glGetAttribLocation(programId, "uv");
+    int textureLocation = glGetUniformLocation(programId, "texture");
 
     // attribute属性を有効にする
     glEnableVertexAttribArray(positionLocation);

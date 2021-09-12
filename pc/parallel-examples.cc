@@ -42,7 +42,7 @@ IGNORE_STRICT_WARNING_POP
 template <class InputIterator, class T>
 T ParallelReduce(size_t num_threads, InputIterator first, InputIterator last,
                  T init) {
-  num_threads            = std::max<size_t>(1, num_threads);
+  num_threads = std::max<size_t>(1, num_threads);
   const size_t num_terms = size_t(last - first);
 
   if (num_terms < num_threads) {
@@ -70,7 +70,7 @@ T ParallelReduce(size_t num_threads, InputIterator first, InputIterator last,
 }
 
 int main(void) {
-  const size_t array_size    = (1 << 26);
+  const size_t array_size = (1 << 26);
   const size_t num_iteration = 10;
 
   const size_t num_threads = std::thread::hardware_concurrency();

@@ -94,6 +94,12 @@ add_executable(std-variant-test ./std-variant-test.cc)
 list(APPEND EXECUTABLE_TARGETS std-variant-test)
 
 foreach(EXECUTABLE_TARGET IN LISTS EXECUTABLE_TARGETS)
+    # clang format
+    if (${APPLY_CLANG_FORMAT})
+      get_target_property(TARGET_SOURCES ${EXECUTABLE_TARGET} SOURCES)
+      clang_format(${EXECUTABLE_TARGET} ${TARGET_SOURCES})
+    endif (${APPLY_CLANG_FORMAT})
+
     # set output directory for executables
     set_target_properties(${EXECUTABLE_TARGET} PROPERTIES
       RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})

@@ -47,7 +47,7 @@ template <class T>
 concept DebugDisplay = Debug<T> && Display<T>;
 
 class A {
-public:
+ public:
   void debug() const { std::cout << "debug A" << std::endl; }
 
   void display() const { std::cout << "display A" << std::endl; }
@@ -56,7 +56,7 @@ public:
 };
 
 class B {
-public:
+ public:
   void debug() const { std::cout << "debug B" << std::endl; }
 
   void display() const { std::cout << "display B" << std::endl; }
