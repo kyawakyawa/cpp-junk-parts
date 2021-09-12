@@ -19,11 +19,14 @@ jobs:
         shell: bash
       - name: use clang12
         run: |
+          wget https://gist.githubusercontent.com/junkdog/70231d6953592cd6f27def59fe19e50d/raw/92f0e73d2558402b7316021c1ab408b30e534de6/update-alternatives-clang.sh
+          chmod +x update-alternatives-clang.sh
+          sudo ./update-alternatives-clang.sh 12 500
           update-alternatives --config clang
-          sudo update-alternatives --remove-all clang
-          sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-12 1000
-          sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-12 1000
-          sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-12 1000
+          # sudo update-alternatives --remove-all clang
+          # sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-12 1000
+          # sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-12 1000
+          # sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-12 1000
       - name: build
         run: |
           CC=clang CXX=clang++ cmake -Bcmake-build-release -H. \
