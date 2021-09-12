@@ -87,7 +87,3 @@ jobs:
           ninja -j2
           dir
           .\c-quartic-equation.exe
-          dir .\Release
-          #.\Release\c-quartic-equation.exe
-          #cd cmake-build-release
-          #nmake -j2

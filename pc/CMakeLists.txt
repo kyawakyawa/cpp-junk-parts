@@ -104,6 +104,12 @@ foreach(EXECUTABLE_TARGET IN LISTS EXECUTABLE_TARGETS)
         target_compile_features(${EXECUTABLE_TARGET} PRIVATE cxx_std_17)
     endif()
 
+    if (MSVC)
+        # Use /W4 instead of /W3
+        string(REGEX REPLACE "/W[0-4]" "/W4" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+        string(REGEX REPLACE "/W[0-4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+    endif(MSVC)
+
     target_compile_options(${EXECUTABLE_TARGET}
             PRIVATE
             $<$<CXX_COMPILER_ID:Clang>:-Wall -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded>
