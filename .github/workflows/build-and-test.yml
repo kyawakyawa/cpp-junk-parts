@@ -19,10 +19,11 @@ jobs:
         shell: bash
       - name: use clang12
         run: |
+          update-alternatives --config clang
           sudo update-alternatives --remove-all clang
-          sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-12 100
-          sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-12 100
-          sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-12 100
+          sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-12 1000
+          sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-12 1000
+          sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-12 1000
       - name: build
         run: |
           CC=clang CXX=clang++ cmake -Bcmake-build-release -H. \
