@@ -45,8 +45,10 @@ jobs:
           fetch-depth: 0 # https://itneko.com/actions-checkout/
           #token: ${{ secrets.SUB_MODULE_TOKEN }}
           submodules: true
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.0.3
+      # - name: Add msbuild to PATH
+      #   uses: microsoft/setup-msbuild@v1.0.3
+      - name: Add Ninja
+        uses: seanmiddleditch/gha-setup-ninja@master
       - name: install library
         shell: powershell
         run: |
@@ -63,7 +65,7 @@ jobs:
           $buildDirectory = "build_win_x64"
           mkdir $buildDirectory -Force -ErrorAction Stop | Out-Null
           cd $buildDirectory
-          cmake  -G "Visual Studio 16 2019" `
+          cmake  -G Ninja `
                  -A $msbuildPlatform `
                  -D CMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake `
                  -D CMAKE_EXPORT_COMPILE_COMMANDS=1 `
@@ -75,8 +77,10 @@ jobs:
                  -D USE_STACK_TRACE_LOGGER=ON `
                  ..
                   # TODO -D USE_CPP20=ON
-          msbuild ALL_BUILD.vcxproj /t:build /p:configuration=Release /p:platform=$msbuildPlatform -maxcpucount
+          ninja -j2
           dir
-          .\Release\c-quartic-equation.exe
+          .\c-quartic-equation.exe
+          dir .\Release
+          #.\Release\c-quartic-equation.exe
           #cd cmake-build-release
           #nmake -j2
