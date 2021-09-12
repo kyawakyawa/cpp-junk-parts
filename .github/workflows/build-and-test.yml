@@ -60,8 +60,8 @@ jobs:
       - name: build
         shell: powershell
         run: |
-          msbuild -version
-          $msbuildPlatform = "x64"
+          # msbuild -version
+          # $msbuildPlatform = "x64"
           $buildDirectory = "build_win_x64"
           mkdir $buildDirectory -Force -ErrorAction Stop | Out-Null
           cd $buildDirectory
