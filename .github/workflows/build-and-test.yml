@@ -49,6 +49,12 @@ jobs:
       #   uses: microsoft/setup-msbuild@v1.0.3
       - name: Add Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
+      - name: Add cl and nmake to PATH
+        uses: ilammy/msvc-dev-cmd@v1
+      - name: Test cl
+        shell: powershell
+        run: |
+          cl /?
       - name: install library
         shell: powershell
         run: |
@@ -67,6 +73,8 @@ jobs:
           cd $buildDirectory
           cmake  -G Ninja `
                  -D CMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake `
+                 -D CMAKE_C_COMPILER="cl" `
+                 -D CMAKE_CXX_COMPILER="cl" `
                  -D CMAKE_EXPORT_COMPILE_COMMANDS=1 `
                  -D CMAKE_BUILD_TYPE=Release `
                  -D BUILD_WITH_MARCH_NATIVE=OFF `
