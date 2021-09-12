@@ -22,6 +22,7 @@ jobs:
           sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-12 1000
           sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-12 1000
           sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-12 1000
+          sudo apt install -y clang-tidy-12 
           sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-12 1000
           update-alternatives --config clang
       - name: build
