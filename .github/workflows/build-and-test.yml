@@ -45,16 +45,10 @@ jobs:
           fetch-depth: 0 # https://itneko.com/actions-checkout/
           #token: ${{ secrets.SUB_MODULE_TOKEN }}
           submodules: true
-      # - name: Add msbuild to PATH
-      #   uses: microsoft/setup-msbuild@v1.0.3
-      - name: Add Ninja
+      - name: Add Ninja # Ninjaを導入
         uses: seanmiddleditch/gha-setup-ninja@master
-      - name: Add cl and nmake to PATH
+      - name: Add cl and nmake to PATH # Ninja+cl.exeを実現するために必要(cl.exe nmake.exeにPATHを通す)
         uses: ilammy/msvc-dev-cmd@v1
-      - name: Test cl
-        shell: powershell
-        run: |
-          cl /?
       - name: install library
         shell: powershell
         run: |
@@ -66,8 +60,6 @@ jobs:
       - name: build
         shell: powershell
         run: |
-          # msbuild -version
-          # $msbuildPlatform = "x64"
           $buildDirectory = "build_win_x64"
           mkdir $buildDirectory -Force -ErrorAction Stop | Out-Null
           cd $buildDirectory
