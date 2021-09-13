@@ -38,11 +38,8 @@ jobs:
                                      -DUSE_SANITIZER=OFF \
                                      -DUSE_STACK_TRACE_LOGGER=ON \
                                      -DAPPLY_CLANG_FORMAT=ON
-          pwd
-          ls cmake-build-release
+
           cp cmake-build-release/compile_commands.json ./compile_commands.json
-          pwd
-          ls cmake-build-release
       - name: do clang-tidy
         run: |
           ./script/do-clang-tidy.sh
