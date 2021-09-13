@@ -93,16 +93,16 @@ jobs:
         uses: lukka/run-vcpkg@v7
         with:
           setupOnly: true
-          vcpkgDirectory: "${{ github.workspace }}/../vcpkg"
+          vcpkgDirectory: "${{ github.workspace }}\..\vcpkg"
           vcpkgGitCommitId: "5568f110b509a9fd90711978a7cb76bae75bb092" # 2021.05.12 release
       - name: install library
         shell: powershell
         run: |
-          ..\vcpkg\vcpkg.exe update
-          ..\vcpkg\vcpkg.exe install eigen3:x64-windows
-          ..\vcpkg\vcpkg.exe install glog:x64-windows
-          ..\vcpkg\vcpkg.exe install glew:x64-windows
-          ..\vcpkg\vcpkg.exe install glfw3:x64-windows
+          ${{ github.workspace }}\..\vcpkg\vcpkg.exe update
+          ${{ github.workspace }}\..\vcpkg\vcpkg.exe install eigen3:x64-windows
+          ${{ github.workspace }}\..\vcpkg\vcpkg.exe install glog:x64-windows
+          ${{ github.workspace }}\..\vcpkg\vcpkg.exe install glew:x64-windows
+          ${{ github.workspace }}\..\vcpkg\vcpkg.exe install glfw3:x64-windows
       - name: build
         shell: powershell
         run: |
@@ -110,7 +110,7 @@ jobs:
           mkdir $buildDirectory -Force -ErrorAction Stop | Out-Null
           cd $buildDirectory
           cmake  -G Ninja `
-                 -D CMAKE_TOOLCHAIN_FILE=..\vcpkg\scripts\buildsystems\vcpkg.cmake `
+                 -D CMAKE_TOOLCHAIN_FILE=${{ github.workspace }}\..\vcpkg\scripts\buildsystems\vcpkg.cmake `
                  -D CMAKE_EXPORT_COMPILE_COMMANDS=1 `
                  -D CMAKE_BUILD_TYPE=Release `
                  -D BUILD_WITH_MARCH_NATIVE=OFF `
