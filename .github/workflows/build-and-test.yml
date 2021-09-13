@@ -14,6 +14,8 @@ jobs:
         uses: lukka/run-vcpkg@v7
         with:
           setupOnly: true
+          vcpkgDirectory: '${{ github.workspace }}../vcpkg'
+          vcpkgGitCommitId: 'c26477297ce1a9d67844e86bf0cda0e7741bd169'
       - name: install library
         run: |
           $VCPKG_ROOT/vcpkg update
