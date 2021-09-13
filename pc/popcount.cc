@@ -34,7 +34,10 @@ SOFTWARE.
 #include <vector>
 
 static uint64_t Xor128Sub(void) {
-  static uint64_t x = 123456789, y = 362436069, z = 521288629, w = 88675123;
+  static uint64_t x = 123456789;
+  static uint64_t y = 362436069;
+  static uint64_t z = 521288629;
+  static uint64_t w = 88675123;
   uint64_t t;
   t = (x ^ (x << 11));
   x = y;
@@ -63,7 +66,9 @@ struct alignas(256) Int256 {
 
 static int SimplePopCount(uint64_t bt) {
   int count = 0;
-  for (; bt; bt &= bt - 1) ++count;
+  for (; bt != 0u; bt &= bt - 1) {
+    ++count;
+  }
   return count;
 }
 
@@ -111,27 +116,27 @@ static int PopCount(const Int256& bt) {
          PopCount(bt.v[3]);
 }
 static int PopCountCpp20(const Int256& bt) {
-  return std::popcount(bt.v[0]) + std::popcount(bt.v[1]) +
-         std::popcount(bt.v[2]) + std::popcount(bt.v[3]);
+  return std::__popcount(bt.v[0]) + std::__popcount(bt.v[1]) +
+         std::__popcount(bt.v[2]) + std::__popcount(bt.v[3]);
 }
 
 static std::bitset<256> Int256ToBitset(const Int256& bt) {
   std::bitset<256> ret(0);
 
   for (int i = 0; i < 64; ++i) {
-    ret[size_t(i)] = ((bt.v[0] >> i) & 1);
+    ret[size_t(i)] = (((bt.v[0] >> i) & 1) != 0u);
   }
 
   for (int i = 0; i < 64; ++i) {
-    ret[size_t(i + 64)] = ((bt.v[1] >> i) & 1);
+    ret[size_t(i + 64)] = (((bt.v[1] >> i) & 1) != 0u);
   }
 
   for (int i = 0; i < 64; ++i) {
-    ret[size_t(i + 128)] = ((bt.v[2] >> i) & 1);
+    ret[size_t(i + 128)] = (((bt.v[2] >> i) & 1) != 0u);
   }
 
   for (int i = 0; i < 64; ++i) {
-    ret[size_t(i + 192)] = ((bt.v[3] >> i) & 1);
+    ret[size_t(i + 192)] = (((bt.v[3] >> i) & 1) != 0u);
   }
 
   return ret;

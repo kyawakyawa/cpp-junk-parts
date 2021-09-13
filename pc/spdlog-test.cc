@@ -37,7 +37,7 @@ IGNORE_STRICT_WARNING_POP
                   ::std::filesystem::relative(__FILE__).c_str(), __LINE__, \
                   __func__ __VA_OPT__(, ) __VA_ARGS__)
 
-int main(int, char**) {
+int main(int /*unused*/, char** /*unused*/) {
   spdlog::set_level(spdlog::level::debug);
   LOG_DEBUG("a b c d e f {} {} {} {} {}", 1, 2, 3, 4, 5);
 

@@ -54,7 +54,7 @@ static uint32_t Rotr32(uint32_t x, unsigned r) {
 
 static uint32_t Pcg32(void) {
   uint64_t x = state;
-  unsigned count = unsigned(x >> 59);  // 59 = 64 - 5
+  auto count = unsigned(x >> 59);  // 59 = 64 - 5
 
   state = x * multiplier + increment;
   x ^= x >> 18;                             // 18 = (64 - 27)/2

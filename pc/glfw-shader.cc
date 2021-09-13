@@ -78,13 +78,13 @@ static GLuint crateShader() {
 }
 
 int main() {
-  if (!glfwInit()) {
+  if (glfwInit() == 0) {
     return -1;
   }
 
   GLFWwindow* window =
       glfwCreateWindow(g_width, g_height, "Simple", nullptr, nullptr);
-  if (!window) {
+  if (window == nullptr) {
     glfwTerminate();
     return -1;
   }
@@ -96,6 +96,7 @@ int main() {
   glewExperimental = GL_TRUE;
   if (glewInit() != GLEW_OK) {
     fprintf(stderr, "failed initializing GLEW.\n");
+    // NOLINTNEXTLINE
     exit(EXIT_FAILURE);
   }
   fprintf(stderr, "success initializing GLEW.\n");
@@ -106,7 +107,7 @@ int main() {
   GLuint programId = crateShader();
 
   // ゲームループ
-  while (!glfwWindowShouldClose(window)) {
+  while (glfwWindowShouldClose(window) == 0) {
     // 画面の初期化
     glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -130,9 +131,9 @@ int main() {
     glEnableVertexAttribArray(colorLocation);
 
     // attribute属性を登録
-    glVertexAttribPointer(positionLocation, 2, GL_FLOAT, false, 0,
+    glVertexAttribPointer(positionLocation, 2, GL_FLOAT, 0u, 0,
                           vertex_position);
-    glVertexAttribPointer(colorLocation, 4, GL_FLOAT, false, 0, vertex_color);
+    glVertexAttribPointer(colorLocation, 4, GL_FLOAT, 0u, 0, vertex_color);
 
     // モデルの描画
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);

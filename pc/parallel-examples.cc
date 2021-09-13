@@ -43,7 +43,7 @@ template <class InputIterator, class T>
 T ParallelReduce(size_t num_threads, InputIterator first, InputIterator last,
                  T init) {
   num_threads = std::max<size_t>(1, num_threads);
-  const size_t num_terms = size_t(last - first);
+  const auto num_terms = size_t(last - first);
 
   if (num_terms < num_threads) {
     return std::accumulate(first, last, init);

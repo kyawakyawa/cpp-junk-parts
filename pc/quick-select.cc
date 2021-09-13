@@ -76,6 +76,7 @@ static int MedianWithQuickSelect(
   while (r - l > 0) {
     size_t pivot_id = 0;
     if (sm == Randomized) {
+      // NOLINTNEXTLINE
       pivot_id = size_t(l + (rand() % (r - l)));
     }
     // TODO 中央値の中央値を実装する // http://www.flint.jp/blog/?entry=109
@@ -96,7 +97,8 @@ static int MedianWithQuickSelect(
     if (size_t(c) == m_id) {
       ret = v[size_t(c)];
       break;
-    } else if (m_id < size_t(c)) {
+    }
+    if (m_id < size_t(c)) {
       r = int(c);
     } else {
       l = int(c + 1);
@@ -160,8 +162,9 @@ int main(int argc, char **argv) {
   it = 100000;
 
   for (size_t i = 0; i < it; ++i) {
-    if (i % std::max<size_t>(1, it / 100) == 0)
+    if (i % std::max<size_t>(1, it / 100) == 0) {
       std::cout << 100. * double(i) / double(it) << "%" << std::endl;
+    }
     n = size_t(dist(engine));
     Test(n, false);
   }

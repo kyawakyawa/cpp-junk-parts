@@ -31,20 +31,23 @@ SOFTWARE.
 #include <time.h>
 
 #define KAHAN_ADD(sum, add)    \
-  diff   = add - remain;       \
-  tmp    = sum + diff;         \
+  diff = add - remain;         \
+  tmp = sum + diff;            \
   remain = (tmp - sum) - diff; \
-  sum    = tmp
+  sum = tmp
 
 #define KAHAN_ADD_LAST(sum, add) \
   diff = add - remain;           \
-  tmp  = sum + diff;             \
-  sum  = tmp
+  tmp = sum + diff;              \
+  sum = tmp
 
+// NOLINTNEXTLINE
 static double evaluate_quadratic_function(const double b, const double c,
                                           const double x) {
-  double sum = 0.0, remain = 0.0;
-  double diff, tmp;
+  double sum = 0.0;
+  double remain = 0.0;
+  double diff;
+  double tmp;
 
   KAHAN_ADD(sum, x * x);
   KAHAN_ADD(sum, b * x);
@@ -53,12 +56,15 @@ static double evaluate_quadratic_function(const double b, const double c,
   return sum;
 }
 
+// NOLINTNEXTLINE
 static double evaluate_cubic_function(const double b, const double c,
                                       const double d, const double x) {
   const double x_sq = x * x;
 
-  double sum = 0.0, remain = 0.0;
-  double diff, tmp;
+  double sum = 0.0;
+  double remain = 0.0;
+  double diff;
+  double tmp;
 
   KAHAN_ADD(sum, x * x_sq);
   KAHAN_ADD(sum, b * x_sq);
@@ -73,8 +79,10 @@ static double evaluate_quartic_function(const double b, const double c,
                                         const double x) {
   const double x_sq = x * x;
 
-  double sum = 0.0, remain = 0.0;
-  double diff, tmp;
+  double sum = 0.0;
+  double remain = 0.0;
+  double diff;
+  double tmp;
 
   KAHAN_ADD(sum, x_sq * x_sq);
   KAHAN_ADD(sum, b * x * x_sq);
@@ -85,16 +93,20 @@ static double evaluate_quartic_function(const double b, const double c,
   return sum;
 }
 
+// NOLINTNEXTLINE
 static double evaluate_derivative_function_of_quadratic_function(
     const double b, const double x) {
   return 2.0 * x + b;
 }
 
+// NOLINTNEXTLINE
 static double evaluate_derivative_function_of_cubic_function(const double b,
                                                              const double c,
                                                              const double x) {
-  double sum = 0.0, remain = 0.0;
-  double diff, tmp;
+  double sum = 0.0;
+  double remain = 0.0;
+  double diff;
+  double tmp;
 
   KAHAN_ADD(sum, 3.0 * x * x);
   KAHAN_ADD(sum, 2.0 * b * x);
@@ -103,14 +115,17 @@ static double evaluate_derivative_function_of_cubic_function(const double b,
   return sum;
 }
 
+// NOLINTNEXTLINE
 static double evaluate_derivative_function_of_quartic_function(const double b,
                                                                const double c,
                                                                const double d,
                                                                const double x) {
   const double x_sq = x * x;
 
-  double sum = 0.0, remain = 0.0;
-  double diff, tmp;
+  double sum = 0.0;
+  double remain = 0.0;
+  double diff;
+  double tmp;
 
   KAHAN_ADD(sum, 4.0 * x * x_sq);
   KAHAN_ADD(sum, 3.0 * b * x_sq);
@@ -124,8 +139,11 @@ static void refine_cubic_equation_solution(const double b, const double c,
                                            const double d, double* x) {
   const double x2 = *x * *x;
 
-  double numerator = 0, denominator = 0;
-  double diff, tmp, remain;
+  double numerator = 0;
+  double denominator = 0;
+  double diff;
+  double tmp;
+  double remain;
 
   remain = 0;
   KAHAN_ADD(numerator, d);
@@ -159,15 +177,16 @@ static void compute_real_solution_of_quadratic_equation(double b,
 
   const double D = b * b - c;
   if (D > D_thr) {
-    *num_solutions        = 2;
-    const double sqD      = sqrt(D);
-    const int signbit_b   = (signbit(b) == 0 ? 0 : 1);  // if b >= 0 => 0 else b < 0 => 1
-    const double sign_b   = signbit_b ? -1.0 : 1.0;
+    *num_solutions = 2;
+    const double sqD = sqrt(D);
+    const int signbit_b =
+        (signbit(b) == 0 ? 0 : 1);  // if b >= 0 => 0 else b < 0 => 1
+    const double sign_b = signbit_b ? -1.0 : 1.0;
     solutions[signbit_b] = (-b - sign_b * sqD);
     solutions[!signbit_b] = c / solutions[signbit_b];
   } else if (D > -D_thr) {
     *num_solutions = 1;
-    solutions[0]   = -b;
+    solutions[0] = -b;
   } else {
     *num_solutions = 0;
   }
@@ -192,7 +211,7 @@ static void compute_one_of_real_non_negative_solution_of_cubic_equation(
   //       where y = x + b
 
   const double p3 = p * p * p;
-  const double D  = q * q - p3;
+  const double D = q * q - p3;
 
   double x_candidate = -1.0;
   if (D < -D_thr) {
@@ -220,11 +239,12 @@ static void compute_one_of_real_non_negative_solution_of_cubic_equation(
   if (signbit(x_candidate)) {
     *find_root = 0;
   } else {
-    *solution  = x_candidate;
+    *solution = x_candidate;
     *find_root = 1;
   }
 }
 
+// NOLINTNEXTLINE
 static void compute_real_solution_of_quartic_equation(
     double b, const double c, const double d, const double e,
     double solutions[4], size_t* num_solutions, const double D_thr,
@@ -247,17 +267,17 @@ static void compute_real_solution_of_quartic_equation(
     if (num_quadratic_equation_solutions >= 1) {
       char zero_flag = 0;  // To deal with floating point arithmetic errors.
       if (quadratic_equation_solutions[0] > multiple_solution_thr) {
-        const double sq               = sqrt(quadratic_equation_solutions[0]);
+        const double sq = sqrt(quadratic_equation_solutions[0]);
         solutions[(*num_solutions)++] = -sq;
         solutions[(*num_solutions)++] = sq;
       } else if (quadratic_equation_solutions[0] > -multiple_solution_thr) {
         solutions[(*num_solutions)++] = 0.0;
-        zero_flag                     = 1;
+        zero_flag = 1;
       }
 
       if (num_quadratic_equation_solutions == 2) {
         if (quadratic_equation_solutions[1] > multiple_solution_thr) {
-          const double sq               = sqrt(quadratic_equation_solutions[1]);
+          const double sq = sqrt(quadratic_equation_solutions[1]);
           solutions[(*num_solutions)++] = -sq;
           solutions[(*num_solutions)++] = sq;
         } else if (!zero_flag &&
@@ -268,7 +288,7 @@ static void compute_real_solution_of_quartic_equation(
     }
   } else {
     double u;
-    char find_root  = 0;
+    char find_root = 0;
     const double c1 = 2.0 * p;
     const double c2 = p * p - 4.0 * r;
     const double c3 = -q * q;
@@ -283,9 +303,9 @@ static void compute_real_solution_of_quartic_equation(
 
     refine_cubic_equation_solution(c1, c2, c3, &u);
 
-    const double sq_u      = sqrt(u);
-    const double alpha     = (p + u) * 0.5;
-    const double beta      = (q * 0.5) / u;
+    const double sq_u = sqrt(u);
+    const double alpha = (p + u) * 0.5;
+    const double beta = (q * 0.5) / u;
     const double sq_u_beta = sq_u * beta;
 
     size_t num_quadratic_equation_solutions0;
@@ -342,7 +362,7 @@ static _Bool test(const double b, const double c, const double d,
   }
 
   const double b4 = b * 0.25;
-  const double q  = d - 2.0 * c * b4 + 8.0 * b4 * b4 * b4;
+  const double q = d - 2.0 * c * b4 + 8.0 * b4 * b4 * b4;
 
   const double thr = 1.0e-12;
 
@@ -369,11 +389,11 @@ static int compare_double(const void* a, const void* b) {
   const double db = *(const double*)b;
   if (da - db < -1e15) {
     return -1;
-  } else if (da - db > 1e-15) {
-    return 1;
-  } else {
-    return 0;
   }
+  if (da - db > 1e-15) {
+    return 1;
+  }
+  return 0;
 }
 
 static _Bool test_and_output(const double b, const double c, const double d,
@@ -415,11 +435,12 @@ static _Bool test_and_output(const double b, const double c, const double d,
 }
 
 static uint64_t benchmark(const double b, const double c, const double d,
-                      const double e) {
+                          const double e) {
   double solutions[4];
   size_t num_solutions;
 
-  struct timespec start_ts, end_ts;
+  struct timespec start_ts;
+  struct timespec end_ts;
 
   timespec_get(&start_ts, TIME_UTC);
 
@@ -432,7 +453,10 @@ static uint64_t benchmark(const double b, const double c, const double d,
 }
 
 static uint64_t xor128(void) {
-  static uint64_t x = 123456789, y = 362436069, z = 521288629, w = 88675123;
+  static uint64_t x = 123456789;
+  static uint64_t y = 362436069;
+  static uint64_t z = 521288629;
+  static uint64_t w = 88675123;
   uint64_t t;
   t = (x ^ (x << 11));
   x = y;
@@ -442,7 +466,7 @@ static uint64_t xor128(void) {
 }
 
 int main(void) {
-  size_t num_test_itr  = 10000000;
+  size_t num_test_itr = 10000000;
   size_t num_bench_itr = 10000000;
 
   for (size_t itr_cnt = 0; itr_cnt < num_test_itr; ++itr_cnt) {
@@ -477,7 +501,7 @@ int main(void) {
     const double e = 4;
 
     const size_t gt_num_solutions = 4;
-    double gt_solutions[]         = {-2, -1, 1, 2};
+    double gt_solutions[] = {-2, -1, 1, 2};
 
     if (!test_and_output(b, c, d, e, gt_num_solutions, gt_solutions)) {
       return 1;
@@ -491,7 +515,7 @@ int main(void) {
     const double e = -6;
 
     const size_t gt_num_solutions = 2;
-    double gt_solutions[]         = {-sqrt(2.0), sqrt(2.0)};
+    double gt_solutions[] = {-sqrt(2.0), sqrt(2.0)};
 
     if (!test_and_output(b, c, d, e, gt_num_solutions, gt_solutions)) {
       return 1;
@@ -505,7 +529,7 @@ int main(void) {
     const double e = -6;
 
     const size_t gt_num_solutions = 2;
-    double gt_solutions[]         = {-sqrt(3.0), sqrt(3.0)};
+    double gt_solutions[] = {-sqrt(3.0), sqrt(3.0)};
 
     if (!test_and_output(b, c, d, e, gt_num_solutions, gt_solutions)) {
       return 1;
@@ -531,7 +555,7 @@ int main(void) {
     const double e = 24;
 
     const size_t gt_num_solutions = 4;
-    double gt_solutions[]         = {1, 2, 3, 4};
+    double gt_solutions[] = {1, 2, 3, 4};
 
     if (!test_and_output(b, c, d, e, gt_num_solutions, gt_solutions)) {
       return 1;
@@ -546,7 +570,7 @@ int main(void) {
     const double e = +24;
 
     const size_t gt_num_solutions = 4;
-    double gt_solutions[]         = {-3, -2, 1, 4};
+    double gt_solutions[] = {-3, -2, 1, 4};
 
     if (!test_and_output(b, c, d, e, gt_num_solutions, gt_solutions)) {
       return 1;
@@ -561,7 +585,7 @@ int main(void) {
     const double e = -18;
 
     const size_t gt_num_solutions = 3;
-    double gt_solutions[]         = {-3, -2, 1};
+    double gt_solutions[] = {-3, -2, 1};
 
     if (!test_and_output(b, c, d, e, gt_num_solutions, gt_solutions)) {
       return 1;
@@ -576,7 +600,7 @@ int main(void) {
     const double e = -3;
 
     const size_t gt_num_solutions = 2;
-    double gt_solutions[]         = {-1, 3};
+    double gt_solutions[] = {-1, 3};
 
     if (!test_and_output(b, c, d, e, gt_num_solutions, gt_solutions)) {
       return 1;
@@ -591,7 +615,7 @@ int main(void) {
     const double e = 9;
 
     const size_t gt_num_solutions = 2;
-    double gt_solutions[]         = {-1, 3};
+    double gt_solutions[] = {-1, 3};
 
     if (!test_and_output(b, c, d, e, gt_num_solutions, gt_solutions)) {
       return 1;
@@ -606,7 +630,7 @@ int main(void) {
     const double e = 625;
 
     const size_t gt_num_solutions = 1;
-    double gt_solutions[]         = {5};
+    double gt_solutions[] = {5};
 
     if (!test_and_output(b, c, d, e, gt_num_solutions, gt_solutions)) {
       return 1;
@@ -621,7 +645,7 @@ int main(void) {
     const double e = 20;
 
     const size_t gt_num_solutions = 1;
-    double gt_solutions[]         = {2};
+    double gt_solutions[] = {2};
 
     if (!test_and_output(b, c, d, e, gt_num_solutions, gt_solutions)) {
       return 1;

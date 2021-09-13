@@ -147,7 +147,8 @@ static bool Test(const double b, const double c, const double d) {
 }
 
 static long Benchmark(const double b, const double c, const double d) {
-  std::chrono::high_resolution_clock::time_point start, end;
+  std::chrono::high_resolution_clock::time_point start;
+  std::chrono::high_resolution_clock::time_point end;
 
   double solutions[3];
   size_t num_solutions;
@@ -168,10 +169,16 @@ static void TryAndOutput(const double b, const double c, const double d) {
 
   ComputeRealSolutionOfCubicEquation(b, c, d, solutions, &num_solutions);
 
-  if (solutions[0] > solutions[1]) std::swap(solutions[0], solutions[1]);
+  if (solutions[0] > solutions[1]) {
+    std::swap(solutions[0], solutions[1]);
+  }
   if (num_solutions == 3) {
-    if (solutions[1] > solutions[2]) std::swap(solutions[1], solutions[2]);
-    if (solutions[0] > solutions[1]) std::swap(solutions[0], solutions[1]);
+    if (solutions[1] > solutions[2]) {
+      std::swap(solutions[1], solutions[2]);
+    }
+    if (solutions[0] > solutions[1]) {
+      std::swap(solutions[0], solutions[1]);
+    }
   }
 
   printf("number of soluton: %lu\n", num_solutions);

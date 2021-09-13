@@ -1,0 +1,21 @@
+Checks: "-*,\
+  cert-*, \
+  -cert-msc32-c, \
+  -cert-msc51-cpp, \
+  concurrency-*, \
+  modernize-*, \
+  -modernize-use-trailing-return-type, \
+  -modernize-redundant-void-arg, \
+  -modernize-avoid-bind, \
+  -modernize-avoid-c-arrays, \
+  -modernize-deprecated-headers, \
+  performance-*, \
+  portability-*, \
+  readability-*,\
+  -readability-convert-member-functions-to-static,\
+  -readability-uppercase-literal-suffix,\
+  -readability-magic-numbers, \
+  "
+WarningsAsErrors: "*, \
+  -modernize-*
+"

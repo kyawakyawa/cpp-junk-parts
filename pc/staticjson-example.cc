@@ -43,15 +43,15 @@ IGNORE_STRICT_WARNING_POP
 
 struct A {
   int hoge = 0;
-  std::string str = "";
+  std::string str;
 };
 
 namespace staticjson {
 
 template <>
-void init(A *d, staticjson::ObjectHandler *h) {
-  h->add_property("hoge", &(d->hoge), staticjson::Flags::Optional);
-  h->add_property("str", &(d->str), staticjson::Flags::Optional);
+void init(A *t, staticjson::ObjectHandler *h) {
+  h->add_property("hoge", &(t->hoge), staticjson::Flags::Optional);
+  h->add_property("str", &(t->str), staticjson::Flags::Optional);
 }
 
 }  // namespace staticjson

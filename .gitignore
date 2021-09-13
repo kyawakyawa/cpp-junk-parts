@@ -1,5 +1,5 @@
-build
-cmake-build-*
-compile_commands.json
-.vscode
-.clangd
+/build
+/cmake-build-*
+/compile_commands.json
+/.vscode
+/.clangd

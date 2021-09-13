@@ -45,8 +45,11 @@ template <typename T = double>
 void RefineCubicEquationSolution(const T b, const T c, const T d, T* x) {
   const T x2 = *x * *x;
 
-  T numerator = T(0), denominator = T(0);
-  T diff, tmp, remain;
+  T numerator = T(0);
+  T denominator = T(0);
+  T diff;
+  T tmp;
+  T remain;
 
   remain = T(0);
   KAHAN_ADD(numerator, d);
@@ -151,6 +154,7 @@ void ComputeOneOfRealNonNegativeSolutionOfCubicEquation(T b, const T c,
 }
 
 template <typename T = double>
+// NOLINTNEXTLINE
 void ComputeRealSolutionOfQuarticEquation(
     T b, const T c, const T d, const T e, T solutions[4], size_t* num_solutions,
     const T D_thr = 1e-14, const T biquadratic_equation_thr = 1e-6,
@@ -194,7 +198,7 @@ void ComputeRealSolutionOfQuarticEquation(
     }
   } else {
     T u;
-    bool find_root = 0;
+    bool find_root = false;
     const T c1 = T(2) * p;
     const T c2 = p * p - T(4) * r;
     const T c3 = -q * q;
@@ -259,8 +263,10 @@ T EvaluateQuarticFunction(const T b, const T c, const T d, const T e,
                           const T x) {
   const T x_sq = x * x;
 
-  T sum = T(0), remain = T(0);
-  T diff, tmp;
+  T sum = T(0);
+  T remain = T(0);
+  T diff;
+  T tmp;
 
   KAHAN_ADD(sum, x_sq * x_sq);
   KAHAN_ADD(sum, b * x * x_sq);
@@ -306,20 +312,21 @@ static bool Test(const double b, const double c, const double d,
   return true;
 }
 
-static long Benchmark(const double b, const double c, const double d,
-                      const double e) {
+static uint64_t Benchmark(const double b, const double c, const double d,
+                          const double e) {
   double solutions[4];
   size_t num_solutions;
 
-  struct timespec start_ts, end_ts;
+  struct timespec start_ts;
+  struct timespec end_ts;
 
   timespec_get(&start_ts, TIME_UTC);
 
   ComputeRealSolutionOfQuarticEquation(b, c, d, e, solutions, &num_solutions);
 
   timespec_get(&end_ts, TIME_UTC);
-  return (long)end_ts.tv_sec * 1000000000 + end_ts.tv_nsec -
-         start_ts.tv_sec * 1000000000 - start_ts.tv_nsec;
+  return uint64_t(end_ts.tv_sec) * 1000000000 + uint64_t(end_ts.tv_nsec) -
+         uint64_t(start_ts.tv_sec) * 1000000000 - uint64_t(start_ts.tv_nsec);
 }
 
 static bool TestAndOutput(const double b, const double c, const double d,
@@ -342,7 +349,7 @@ static bool TestAndOutput(const double b, const double c, const double d,
   if (num_solutions != gt_num_solutions) {
     printf("the number of solutions is wrong. (%lu (result) vs %lu (gt)\n",
            num_solutions, gt_num_solutions);
-    return 0;
+    return false;
   }
 
   std::sort(gt_solutions, gt_solutions + gt_num_solutions);
@@ -352,12 +359,12 @@ static bool TestAndOutput(const double b, const double c, const double d,
     if (fabs(solutions[i] - gt_solutions[i]) > thr) {
       printf("the solution is wrong. (%.15f (result) vs %.15f (gt))\n",
              solutions[i], gt_solutions[i]);
-      return 0;
+      return false;
     }
   }
   printf("\n");
 
-  return 1;
+  return true;
 }
 
 int main(void) {
@@ -384,7 +391,7 @@ int main(void) {
   }
   printf("Pass Test\n");
 
-  long sum_com_time = 0.0;
+  uint64_t sum_com_time = 0;
   for (size_t itr_cnt = 0; itr_cnt < num_bench_itr; ++itr_cnt) {
     std::uniform_real_distribution<double> dist(-5.0, 5.0);
     const double b = dist(engine);
