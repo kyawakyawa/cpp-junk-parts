@@ -10,12 +10,16 @@ jobs:
           fetch-depth: 0 # https://itneko.com/actions-checkout/
           #token: ${{ secrets.SUB_MODULE_TOKEN }}
           submodules: true
+      - name: Clone vcpkg
+        run: |
+          cd ..
+          git clone https://github.com/microsoft/vcpkg.git
       - name: Restore from cache and install vcpkg
         uses: lukka/run-vcpkg@v7
         with:
           setupOnly: true
-          vcpkgDirectory: '${{ github.workspace }}../vcpkg'
-          vcpkgGitCommitId: 'c26477297ce1a9d67844e86bf0cda0e7741bd169'
+          vcpkgDirectory: "${{ github.workspace }}/../vcpkg"
+          vcpkgGitCommitId: "c26477297ce1a9d67844e86bf0cda0e7741bd169"
       - name: install library
         run: |
           $VCPKG_ROOT/vcpkg update
