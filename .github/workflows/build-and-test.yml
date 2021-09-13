@@ -19,7 +19,7 @@ jobs:
         with:
           setupOnly: true
           vcpkgDirectory: "${{ github.workspace }}/../vcpkg"
-          vcpkgGitCommitId: "c26477297ce1a9d67844e86bf0cda0e7741bd169"
+          vcpkgGitCommitId: "5568f110b509a9fd90711978a7cb76bae75bb092" # 2021.05.12 release
       - name: install library
         run: |
           $VCPKG_ROOT/vcpkg update
@@ -81,14 +81,24 @@ jobs:
         uses: seanmiddleditch/gha-setup-ninja@master
       - name: Add cl and nmake to PATH # Ninja+cl.exeを実現するために必要(cl.exe nmake.exeにPATHを通す)
         uses: ilammy/msvc-dev-cmd@v1
+      - name: Clone vcpkg
+        run: |
+          cd ..
+          git clone https://github.com/microsoft/vcpkg.git
+      - name: Restore from cache and install vcpkg
+        uses: lukka/run-vcpkg@v7
+        with:
+          setupOnly: true
+          vcpkgDirectory: "${{ github.workspace }}/../vcpkg"
+          vcpkgGitCommitId: "5568f110b509a9fd90711978a7cb76bae75bb092" # 2021.05.12 release
       - name: install library
         shell: powershell
         run: |
-          C:\vcpkg\vcpkg.exe update
-          C:\vcpkg\vcpkg.exe install eigen3:x64-windows
-          C:\vcpkg\vcpkg.exe install glog:x64-windows
-          C:\vcpkg\vcpkg.exe install glew:x64-windows
-          C:\vcpkg\vcpkg.exe install glfw3:x64-windows
+          $VCPKG_ROOT\vcpkg.exe update
+          $VCPKG_ROOT\vcpkg.exe install eigen3:x64-windows
+          $VCPKG_ROOT\vcpkg.exe install glog:x64-windows
+          $VCPKG_ROOT\vcpkg.exe install glew:x64-windows
+          $VCPKG_ROOT\vcpkg.exe install glfw3:x64-windows
       - name: build
         shell: powershell
         run: |
@@ -96,7 +106,7 @@ jobs:
           mkdir $buildDirectory -Force -ErrorAction Stop | Out-Null
           cd $buildDirectory
           cmake  -G Ninja `
-                 -D CMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake `
+                 -D CMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake `
                  -D CMAKE_EXPORT_COMPILE_COMMANDS=1 `
                  -D CMAKE_BUILD_TYPE=Release `
                  -D BUILD_WITH_MARCH_NATIVE=OFF `
