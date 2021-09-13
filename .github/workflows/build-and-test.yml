@@ -110,7 +110,7 @@ jobs:
           mkdir $buildDirectory -Force -ErrorAction Stop | Out-Null
           cd $buildDirectory
           cmake  -G Ninja `
-                 -D CMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake `
+                 -D CMAKE_TOOLCHAIN_FILE=..\vcpkg\scripts\buildsystems\vcpkg.cmake `
                  -D CMAKE_EXPORT_COMPILE_COMMANDS=1 `
                  -D CMAKE_BUILD_TYPE=Release `
                  -D BUILD_WITH_MARCH_NATIVE=OFF `
