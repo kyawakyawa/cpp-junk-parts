@@ -114,8 +114,10 @@ jobs:
         run: |
           cd ..
           git clone https://github.com/opencv/opencv.git
-          cd opencv && git checkout 4.5.3
-          mkdir build && cd build
+          cd opencv 
+          git checkout 4.5.3
+          mkdir build -Force -ErrorAction Stop | Out-Null
+          cd build
           cmake  -G Ninja `
                 -D CMAKE_TOOLCHAIN_FILE=${{ github.workspace }}\..\vcpkg\scripts\buildsystems\vcpkg.cmake `
                 -D CMAKE_BUILD_TYPE=Release `
