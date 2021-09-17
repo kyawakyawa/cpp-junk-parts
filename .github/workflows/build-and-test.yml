@@ -21,7 +21,7 @@ jobs:
           CC=clang-12 CXX=clang++-12 cmake \
                                      -DCMAKE_BUILD_TYPE=Release \
                                      -DCMAKE_INSTALL_PREFIX=/usr/local \
-                                     -Bbuild -H. \
+                                     -Bbuild -H.
           cd build && make -j2 && sudo make install
           cd ..
           git clone https://github.com/google/glog.git
@@ -30,7 +30,7 @@ jobs:
                                      -DCMAKE_BUILD_TYPE=Release \
                                      -DCMAKE_INSTALL_PREFIX=/usr/local \
                                      -DBUILD_SHARED_LIBS=ON \
-                                     -Bbuild -H. && \
+                                     -Bbuild -H.
           cd build && make -j2 && sudo make install
         shell: bash
       - name: use clang12
