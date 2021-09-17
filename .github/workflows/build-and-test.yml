@@ -105,6 +105,8 @@ jobs:
           ${{ github.workspace }}\..\vcpkg\vcpkg.exe install glog:x64-windows
           ${{ github.workspace }}\..\vcpkg\vcpkg.exe install glew:x64-windows
           ${{ github.workspace }}\..\vcpkg\vcpkg.exe install glfw3:x64-windows
+          ${{ github.workspace }}\..\vcpkg\vcpkg.exe install ffmpeg:x64-windows
+          ${{ github.workspace }}\..\vcpkg\vcpkg.exe install opencv4[eigen,ffmpeg,openmp]:x64-windows
       - name: build
         shell: powershell
         run: |
