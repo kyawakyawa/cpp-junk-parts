@@ -10,25 +10,28 @@ jobs:
           fetch-depth: 0 # https://itneko.com/actions-checkout/
           #token: ${{ secrets.SUB_MODULE_TOKEN }}
           submodules: true
-      - name: Clone vcpkg
-        run: |
-          cd ..
-          git clone https://github.com/microsoft/vcpkg.git
-          cd vcpkg
-          git checkout 5568f110b509a9fd90711978a7cb76bae75bb092 # 2021.05.12 release
-      - name: Restore from cache and install vcpkg
-        uses: lukka/run-vcpkg@v7
-        with:
-          setupOnly: true
-          vcpkgDirectory: "${{ github.workspace }}/../vcpkg"
-          vcpkgGitCommitId: "5568f110b509a9fd90711978a7cb76bae75bb092" # 2021.05.12 release
       - name: install library
         run: |
-          $VCPKG_ROOT/vcpkg update
-          $VCPKG_ROOT/vcpkg install eigen3:x64-linux
-          $VCPKG_ROOT/vcpkg install glog:x64-linux
           sudo apt-get update -y
           sudo apt-get install -y libglfw3 libglfw3-dev libglew-dev
+          cd .. 
+          https://gitlab.com/libeigen/eigen.git
+          cd eigen
+          git checkout 3.4.0
+          CC=clang-12 CXX=clang++-12 cmake \
+                                     -DCMAKE_BUILD_TYPE=Release \
+                                     -DCMAKE_INSTALL_PREFIX=/usr/local \
+                                     -Bbuild -H. \
+          cd build && make -j2 && sudo make install
+          cd ..
+          git clone https://github.com/google/glog.git
+          cd glog && git checkout v0.5.0
+          CC=clang-12 CXX=clang++-12 cmake \
+                                     -DCMAKE_BUILD_TYPE=Release \
+                                     -DCMAKE_INSTALL_PREFIX=/usr/local \
+                                     -DBUILD_SHARED_LIBS=ON \
+                                     -Bbuild -H. && \
+          cd build && make -j2 && sudo make install
         shell: bash
       - name: use clang12
         run: |
@@ -43,7 +46,6 @@ jobs:
       - name: CMake Configure
         run: |
           CC=clang CXX=clang++ cmake -Bcmake-build-release -H. \
-                                     -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake \
                                      -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
                                      -DCMAKE_BUILD_TYPE=Release \
                                      -DBUILD_WITH_MARCH_NATIVE=OFF \
