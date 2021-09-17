@@ -2,6 +2,7 @@ Checks: "-*,\
   cert-*, \
   -cert-msc32-c, \
   -cert-msc51-cpp, \
+  clang-analyzer-*, \
   concurrency-*, \
   modernize-*, \
   -modernize-use-trailing-return-type, \
