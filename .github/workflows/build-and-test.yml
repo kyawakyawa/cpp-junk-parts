@@ -15,7 +15,7 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y libglfw3 libglfw3-dev libglew-dev
           cd .. 
-          https://gitlab.com/libeigen/eigen.git
+          git clone https://gitlab.com/libeigen/eigen.git
           cd eigen
           git checkout 3.4.0
           CC=clang-12 CXX=clang++-12 cmake \
