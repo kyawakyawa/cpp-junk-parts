@@ -27,14 +27,16 @@ jobs:
           $VCPKG_ROOT/vcpkg update
           $VCPKG_ROOT/vcpkg install eigen3:x64-linux
           $VCPKG_ROOT/vcpkg install glog:x64-linux
-          sudo apt install -y libglfw3 libglfw3-dev libglew-dev
+          sudo apt-get update -y
+          sudo apt-get install -y libglfw3 libglfw3-dev libglew-dev
         shell: bash
       - name: use clang12
         run: |
           sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-12 1000
           sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-12 1000
           sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-12 1000
-          sudo apt install -y clang-tidy-12 
+          sudo apt-get update -y
+          sudo apt-get install -y clang-tidy-12 
           sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-12 1000
           update-alternatives --config clang
         shell: bash
