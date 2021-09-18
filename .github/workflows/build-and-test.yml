@@ -109,11 +109,11 @@ jobs:
           ${{ github.workspace }}\..\vcpkg\vcpkg.exe install glfw3:x64-windows
           # ${{ github.workspace }}\..\vcpkg\vcpkg.exe install ffmpeg[avcodec,avformat,swscale,avresample]:x64-windows
           # ${{ github.workspace }}\..\vcpkg\vcpkg.exe install opencv4[eigen,ffmpeg,openmp]:x64-windows
-      # - name: Cache OpenCV
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: C:\opencv
-      #     key: ${{ runner.os }}-1631954805
+      - name: Cache OpenCV
+        uses: actions/cache@v2
+        with:
+          path: C:\opencv
+          key: ${{ runner.os }}-1631954805
       - name: build OpenCV
         shell: powershell
         run: |
