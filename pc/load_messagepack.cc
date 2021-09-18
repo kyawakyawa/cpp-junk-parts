@@ -48,7 +48,7 @@ static std::vector<uint8_t> load_msgpack(const std::string& filename) {
   }
   std::vector<uint8_t> msgpack;
   while (true) {
-    uint8_t buffer;
+    uint8_t buffer = 0;
     ifs.read(reinterpret_cast<char*>(&buffer), sizeof(uint8_t));
     if (ifs.eof()) {
       break;

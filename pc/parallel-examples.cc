@@ -81,7 +81,7 @@ int main(void) {
   for (size_t i = 0; i < num_iteration; ++i) {
     std::random_device rnd;
     std::shuffle(vec.begin(), vec.end(), std::mt19937(rnd()));
-    std::for_each(vec.begin(), vec.end(), [&mod](int64_t& u) { u %= mod; });
+    std::for_each(vec.begin(), vec.end(), [&](int64_t& u) { u %= mod; });
 
     const std::chrono::system_clock::time_point start_parallel_reduce =
         std::chrono::system_clock::now();

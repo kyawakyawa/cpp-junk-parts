@@ -46,8 +46,8 @@ static double evaluate_quadratic_function(const double b, const double c,
                                           const double x) {
   double sum = 0.0;
   double remain = 0.0;
-  double diff;
-  double tmp;
+  double diff = 0.0;
+  double tmp = 0.0;
 
   KAHAN_ADD(sum, x * x);
   KAHAN_ADD(sum, b * x);
@@ -63,8 +63,8 @@ static double evaluate_cubic_function(const double b, const double c,
 
   double sum = 0.0;
   double remain = 0.0;
-  double diff;
-  double tmp;
+  double diff = 0.0;
+  double tmp = 0.0;
 
   KAHAN_ADD(sum, x * x_sq);
   KAHAN_ADD(sum, b * x_sq);
@@ -81,8 +81,8 @@ static double evaluate_quartic_function(const double b, const double c,
 
   double sum = 0.0;
   double remain = 0.0;
-  double diff;
-  double tmp;
+  double diff = 0.0;
+  double tmp = 0.0;
 
   KAHAN_ADD(sum, x_sq * x_sq);
   KAHAN_ADD(sum, b * x * x_sq);
@@ -105,8 +105,8 @@ static double evaluate_derivative_function_of_cubic_function(const double b,
                                                              const double x) {
   double sum = 0.0;
   double remain = 0.0;
-  double diff;
-  double tmp;
+  double diff = 0.0;
+  double tmp = 0.0;
 
   KAHAN_ADD(sum, 3.0 * x * x);
   KAHAN_ADD(sum, 2.0 * b * x);
@@ -124,8 +124,8 @@ static double evaluate_derivative_function_of_quartic_function(const double b,
 
   double sum = 0.0;
   double remain = 0.0;
-  double diff;
-  double tmp;
+  double diff = 0.0;
+  double tmp = 0.0;
 
   KAHAN_ADD(sum, 4.0 * x * x_sq);
   KAHAN_ADD(sum, 3.0 * b * x_sq);
@@ -141,9 +141,9 @@ static void refine_cubic_equation_solution(const double b, const double c,
 
   double numerator = 0;
   double denominator = 0;
-  double diff;
-  double tmp;
-  double remain;
+  double diff = 0.0;
+  double tmp = 0.0;
+  double remain = 0.0;
 
   remain = 0;
   KAHAN_ADD(numerator, d);
@@ -259,7 +259,7 @@ static void compute_real_solution_of_quartic_equation(
 
   if (fabs(q) < biquadratic_equation_thr) {
     double quadratic_equation_solutions[2];
-    size_t num_quadratic_equation_solutions;
+    size_t num_quadratic_equation_solutions = 0;
     compute_real_solution_of_quadratic_equation(
         p, r, quadratic_equation_solutions, &num_quadratic_equation_solutions,
         D_thr);
@@ -287,7 +287,7 @@ static void compute_real_solution_of_quartic_equation(
       }
     }
   } else {
-    double u;
+    double u = 0.0;
     char find_root = 0;
     const double c1 = 2.0 * p;
     const double c2 = p * p - 4.0 * r;
@@ -308,14 +308,14 @@ static void compute_real_solution_of_quartic_equation(
     const double beta = (q * 0.5) / u;
     const double sq_u_beta = sq_u * beta;
 
-    size_t num_quadratic_equation_solutions0;
+    size_t num_quadratic_equation_solutions0 = 0;
 
     compute_real_solution_of_quadratic_equation(
         sq_u, alpha - sq_u_beta, solutions, &num_quadratic_equation_solutions0,
         D_thr);
 
     double quadratic_equation_solutions1[2];
-    size_t num_quadratic_equation_solutions1;
+    size_t num_quadratic_equation_solutions1 = 0;
 
     compute_real_solution_of_quadratic_equation(
         -sq_u, alpha + sq_u_beta, quadratic_equation_solutions1,
@@ -352,7 +352,7 @@ static void compute_real_solution_of_quartic_equation(
 static _Bool test(const double b, const double c, const double d,
                   const double e) {
   double solutions[4];
-  size_t num_solutions;
+  size_t num_solutions = 0;
 
   compute_real_solution_of_quartic_equation(
       b, c, d, e, solutions, &num_solutions, 1e-14, 1e-14, 1e-14);
@@ -400,7 +400,7 @@ static _Bool test_and_output(const double b, const double c, const double d,
                              const double e, const size_t gt_num_solutions,
                              double gt_solutions[]) {
   double solutions[4];
-  size_t num_solutions;
+  size_t num_solutions = 0;
 
   compute_real_solution_of_quartic_equation(
       b, c, d, e, solutions, &num_solutions, /*D_thr*/ 1e-14,
@@ -437,7 +437,7 @@ static _Bool test_and_output(const double b, const double c, const double d,
 static uint64_t benchmark(const double b, const double c, const double d,
                           const double e) {
   double solutions[4];
-  size_t num_solutions;
+  size_t num_solutions = 0;
 
   struct timespec start_ts;
   struct timespec end_ts;
@@ -457,8 +457,7 @@ static uint64_t xor128(void) {
   static uint64_t y = 362436069;
   static uint64_t z = 521288629;
   static uint64_t w = 88675123;
-  uint64_t t;
-  t = (x ^ (x << 11));
+  uint64_t t = (x ^ (x << 11));
   x = y;
   y = z;
   z = w;
@@ -482,7 +481,7 @@ int main(void) {
   }
   printf("Pass Test\n");
 
-  uint64_t sum_com_time = 0.0;
+  uint64_t sum_com_time = 0;
   for (size_t itr_cnt = 0; itr_cnt < num_bench_itr; ++itr_cnt) {
     const double b = (double)(xor128()) / (double)(UINT64_MAX - 1) * 10;
     const double c = (double)(xor128()) / (double)(UINT64_MAX - 1) * 10;

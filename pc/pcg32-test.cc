@@ -43,6 +43,7 @@ namespace kyawakyawa {
 using RNG = pcg32;
 
 // https://en.wikipedia.org/wiki/Permuted_congruential_generator
+// NOLINTNEXTLINE
 static uint64_t state = 0x4d595df4d0f33173;  // Or something seed-dependent
 static uint64_t const multiplier = 6364136223846793005u;
 static uint64_t const increment =

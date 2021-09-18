@@ -95,10 +95,12 @@ int main() {
   // Init GLEW after making glfw's window
   glewExperimental = GL_TRUE;
   if (glewInit() != GLEW_OK) {
+    // NOLINTNEXTLINE
     fprintf(stderr, "failed initializing GLEW.\n");
     // NOLINTNEXTLINE
     exit(EXIT_FAILURE);
   }
+  // NOLINTNEXTLINE
   fprintf(stderr, "success initializing GLEW.\n");
 
   // モニタとの同期

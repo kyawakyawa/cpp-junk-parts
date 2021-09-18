@@ -38,7 +38,7 @@ static uint64_t Xor128Sub(void) {
   static uint64_t y = 362436069;
   static uint64_t z = 521288629;
   static uint64_t w = 88675123;
-  uint64_t t;
+  uint64_t t = 0;
   t = (x ^ (x << 11));
   x = y;
   y = z;
@@ -54,7 +54,7 @@ static uint64_t Xor128(void) {
 struct alignas(256) Int256 {
   uint64_t v[4];
   inline Int256 operator^(const Int256& o) const {
-    Int256 ret;
+    Int256 ret{};
     ret.v[0] = (v[0] ^ o.v[0]);
     ret.v[1] = (v[1] ^ o.v[1]);
     ret.v[2] = (v[2] ^ o.v[2]);
@@ -193,6 +193,7 @@ static void BenchPopCount(void) {
 
   std::vector<int> result;
 
+  // NOLINTNEXTLINE
   printf("[Info] start hamming dist bench (%lu iteration)\n", num_exe);
   result.reserve(num_exe * 3);
   const std::chrono::system_clock::time_point start_popcount =
@@ -225,8 +226,10 @@ static void BenchPopCount(void) {
       });
   const std::chrono::system_clock::time_point end_popcount_bitset =
       std::chrono::system_clock::now();
+  // NOLINTNEXTLINE
   printf("[Info] end bench\n");
 
+  // NOLINTNEXTLINE
   printf("[Info] start check\n");
   for (size_t i = 0; i < num_exe; ++i) {
     if (result[i] != result[i + num_exe] ||
@@ -235,6 +238,7 @@ static void BenchPopCount(void) {
       std::cerr << "[Error]" << std::endl;
     }
   }
+  // NOLINTNEXTLINE
   printf("[Info] end check\n");
 
   const auto time_popcount =
@@ -250,9 +254,12 @@ static void BenchPopCount(void) {
           end_popcount_bitset - start_popcount_bitset)
           .count();
 
+  // NOLINTNEXTLINE
   printf("      my popcount: %3.6f ms\n", double(time_popcount) / 1000000);
+  // NOLINTNEXTLINE
   printf("   c++20 popcount: %3.6f ms\n",
          double(time_popcount_cpp20) / 1000000);
+  // NOLINTNEXTLINE
   printf("std::bitset count: %3.6f ms\n",
          double(time_popcount_bitset) / 1000000);
 }

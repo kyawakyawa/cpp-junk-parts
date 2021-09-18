@@ -129,7 +129,7 @@ inline void ComputeRealSolutionOfCubicEquation(
 
 static bool Test(const double b, const double c, const double d) {
   double solutions[3];
-  size_t num_solutions;
+  size_t num_solutions = 0;
 
   ComputeRealSolutionOfCubicEquation(b, c, d, solutions, &num_solutions);
 
@@ -139,6 +139,7 @@ static bool Test(const double b, const double c, const double d) {
 
   for (size_t i = 0; i < num_solutions; ++i) {
     if (abs(EvaluateCubicFunction(b, c, d, solutions[i])) > 1e-12) {
+      // NOLINTNEXTLINE
       printf("error %e\n", abs(EvaluateCubicFunction(b, c, d, solutions[i])));
       return false;
     }
@@ -151,7 +152,7 @@ static long Benchmark(const double b, const double c, const double d) {
   std::chrono::high_resolution_clock::time_point end;
 
   double solutions[3];
-  size_t num_solutions;
+  size_t num_solutions = 0;
 
   start = std::chrono::high_resolution_clock::now();
   ComputeRealSolutionOfCubicEquation(b, c, d, solutions, &num_solutions);
@@ -165,7 +166,7 @@ static long Benchmark(const double b, const double c, const double d) {
 
 static void TryAndOutput(const double b, const double c, const double d) {
   double solutions[3];
-  size_t num_solutions;
+  size_t num_solutions = 0;
 
   ComputeRealSolutionOfCubicEquation(b, c, d, solutions, &num_solutions);
 
@@ -181,11 +182,14 @@ static void TryAndOutput(const double b, const double c, const double d) {
     }
   }
 
+  // NOLINTNEXTLINE
   printf("number of soluton: %lu\n", num_solutions);
   for (size_t i = 0; i < num_solutions; ++i) {
+    // NOLINTNEXTLINE
     printf("x_%lu = %f, f(x) = %e\n", i + 1, solutions[i],
            EvaluateCubicFunction(b, c, d, solutions[i]));
   }
+  // NOLINTNEXTLINE
   printf("\n");
 }
 
@@ -202,6 +206,7 @@ int main(void) {
     const double c = dist(engine);
     const double d = dist(engine);
     if (!Test(b, c, d)) {
+      // NOLINTNEXTLINE
       printf("Test failed\n");
       return 1;
     }
@@ -216,6 +221,7 @@ int main(void) {
 
     sum_com_time += Benchmark(b, c, d);
   }
+  // NOLINTNEXTLINE
   printf("\nbenchmark mean time: %f[ns]\n\n",
          double(sum_com_time) / double(num_bench_itr));
   {

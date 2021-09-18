@@ -96,6 +96,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     return EXIT_SUCCESS;
   }
 
+  // NOLINTNEXTLINE
   printf("%s\n", argv[1]);
 
   staticjson::ParseStatus res;

@@ -169,7 +169,7 @@ void ComputeRealSolutionOfQuarticEquation(
 
   if (abs(q) < biquadratic_equation_thr) {
     T quadratic_equation_solutions[2];
-    size_t num_quadratic_equation_solutions;
+    size_t num_quadratic_equation_solutions = 0;
     ComputeRealSolutionOfQuadraticEquation(p, r, quadratic_equation_solutions,
                                            &num_quadratic_equation_solutions,
                                            D_thr);
@@ -217,14 +217,14 @@ void ComputeRealSolutionOfQuarticEquation(
     const T beta = (q * T(0.5)) / u;
     const T sq_u_beta = sq_u * beta;
 
-    size_t num_quadratic_equation_solutions0;
+    size_t num_quadratic_equation_solutions0 = 0;
 
     ComputeRealSolutionOfQuadraticEquation(sq_u, alpha - sq_u_beta, solutions,
                                            &num_quadratic_equation_solutions0,
                                            D_thr);
 
     T quadratic_equation_solutions1[2];
-    size_t num_quadratic_equation_solutions1;
+    size_t num_quadratic_equation_solutions1 = 0;
 
     ComputeRealSolutionOfQuadraticEquation(
         -sq_u, alpha + sq_u_beta, quadratic_equation_solutions1,
@@ -280,7 +280,7 @@ T EvaluateQuarticFunction(const T b, const T c, const T d, const T e,
 static bool Test(const double b, const double c, const double d,
                  const double e) {
   double solutions[4];
-  size_t num_solutions;
+  size_t num_solutions = 0;
 
   ComputeRealSolutionOfQuarticEquation(b, c, d, e, solutions, &num_solutions);
 
@@ -298,13 +298,19 @@ static bool Test(const double b, const double c, const double d,
   for (size_t i = 0; i < num_solutions; ++i) {
     if (std::isfinite(solutions[i]) &&
         abs(EvaluateQuarticFunction(b, c, d, e, solutions[i])) > thr) {
+      // NOLINTNEXTLINE
+      // NOLINTNEXTLINE
       printf("error %e\n",
              abs(EvaluateQuarticFunction(b, c, d, e, solutions[i])));
+      // NOLINTNEXTLINE
       printf("x^4 + %f x^3 + %f x^2 + %f x + %f\n", b, c, d, e);
+      // NOLINTNEXTLINE
       printf("num solution %lu\n", num_solutions);
       for (size_t j = 0; j < num_solutions; ++j) {
+        // NOLINTNEXTLINE
         printf("x_%lu = %f\n", j, solutions[j]);
       }
+      // NOLINTNEXTLINE
       printf("q = %e\n", q);
       return false;
     }
@@ -315,10 +321,10 @@ static bool Test(const double b, const double c, const double d,
 static uint64_t Benchmark(const double b, const double c, const double d,
                           const double e) {
   double solutions[4];
-  size_t num_solutions;
+  size_t num_solutions = 0;
 
-  struct timespec start_ts;
-  struct timespec end_ts;
+  struct timespec start_ts {};
+  struct timespec end_ts {};
 
   timespec_get(&start_ts, TIME_UTC);
 
@@ -333,7 +339,7 @@ static bool TestAndOutput(const double b, const double c, const double d,
                           const double e, const size_t gt_num_solutions,
                           double gt_solutions[]) {
   double solutions[4];
-  size_t num_solutions;
+  size_t num_solutions = 0;
 
   ComputeRealSolutionOfQuarticEquation(
       b, c, d, e, solutions, &num_solutions, /*D_thr*/ 1e-14,
@@ -341,12 +347,15 @@ static bool TestAndOutput(const double b, const double c, const double d,
 
   std::sort(solutions, solutions + num_solutions);
 
+  // NOLINTNEXTLINE
   printf("number of soluton: %lu\n", num_solutions);
   for (size_t i = 0; i < num_solutions; ++i) {
     double y = EvaluateQuarticFunction(b, c, d, e, solutions[i]);
+    // NOLINTNEXTLINE
     printf("x_%lu = %f, f(x) = %.15e\n", i + 1, solutions[i], y);
   }
   if (num_solutions != gt_num_solutions) {
+    // NOLINTNEXTLINE
     printf("the number of solutions is wrong. (%lu (result) vs %lu (gt)\n",
            num_solutions, gt_num_solutions);
     return false;
@@ -357,11 +366,13 @@ static bool TestAndOutput(const double b, const double c, const double d,
   const double thr = 1e-15;
   for (size_t i = 0; i < num_solutions; ++i) {
     if (fabs(solutions[i] - gt_solutions[i]) > thr) {
+      // NOLINTNEXTLINE
       printf("the solution is wrong. (%.15f (result) vs %.15f (gt))\n",
              solutions[i], gt_solutions[i]);
       return false;
     }
   }
+  // NOLINTNEXTLINE
   printf("\n");
 
   return true;
@@ -385,10 +396,12 @@ int main(void) {
     const double d = dist(engine);
     const double e = dist(engine);
     if (!Test(b, c, d, e)) {
+      // NOLINTNEXTLINE
       printf("Test failed\n");
       return 1;
     }
   }
+  // NOLINTNEXTLINE
   printf("Pass Test\n");
 
   uint64_t sum_com_time = 0;
@@ -401,6 +414,7 @@ int main(void) {
 
     sum_com_time += Benchmark(b, c, d, e);
   }
+  // NOLINTNEXTLINE
   printf("\nbenchmark mean time: %f[ns]\n\n",
          double(sum_com_time) / double(num_bench_itr));
   {

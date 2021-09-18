@@ -118,7 +118,7 @@ foreach(EXECUTABLE_TARGET IN LISTS EXECUTABLE_TARGETS)
 
     target_compile_options(${EXECUTABLE_TARGET}
             PRIVATE
-            $<$<CXX_COMPILER_ID:Clang>:-Wall -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded>
+            $<$<CXX_COMPILER_ID:Clang>:-Wall -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-c++20-compat>
             $<$<CXX_COMPILER_ID:AppleClang>:-Wall -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded>
             $<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Wswitch-enum -Wswitch-default -Winvalid-pch -Wredundant-decls -Wformat=2 -Wmissing-format-attribute -Wformat-nonliteral>
             $<$<CXX_COMPILER_ID:MSVC>:/W4>)
