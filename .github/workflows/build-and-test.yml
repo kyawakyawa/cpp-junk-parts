@@ -107,7 +107,7 @@ jobs:
           ${{ github.workspace }}\..\vcpkg\vcpkg.exe install glog:x64-windows
           ${{ github.workspace }}\..\vcpkg\vcpkg.exe install glew:x64-windows
           ${{ github.workspace }}\..\vcpkg\vcpkg.exe install glfw3:x64-windows
-          ${{ github.workspace }}\..\vcpkg\vcpkg.exe install ffmpeg[avcodec,avformat,swscale,avresample]:x64-windows
+          # ${{ github.workspace }}\..\vcpkg\vcpkg.exe install ffmpeg[avcodec,avformat,swscale,avresample]:x64-windows
           # ${{ github.workspace }}\..\vcpkg\vcpkg.exe install opencv4[eigen,ffmpeg,openmp]:x64-windows
       - name: build OpenCV
         shell: powershell
@@ -131,6 +131,8 @@ jobs:
                 -D BUILD_TESTS=OFF `
                 -D WITH_EIGEN=ON `
                 -D WITH_FFMPEG=ON `
+                -D OPENCV_FFMPEG_USE_FIND_PACKAGE=OFF `
+                -D OPENCV_FFMPEG_SKIP_DOWNLOAD=OFF `
                 -D WITH_OPENMP=ON `
                 ..
           ninja -j2
