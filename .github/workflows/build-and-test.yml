@@ -109,34 +109,41 @@ jobs:
           ${{ github.workspace }}\..\vcpkg\vcpkg.exe install glfw3:x64-windows
           # ${{ github.workspace }}\..\vcpkg\vcpkg.exe install ffmpeg[avcodec,avformat,swscale,avresample]:x64-windows
           # ${{ github.workspace }}\..\vcpkg\vcpkg.exe install opencv4[eigen,ffmpeg,openmp]:x64-windows
+      # - name: Cache OpenCV
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: C:\opencv
+      #     key: ${{ runner.os }}-1631954805
       - name: build OpenCV
         shell: powershell
         run: |
-          cd ..
-          git clone https://github.com/opencv/opencv.git
-          cd opencv 
-          git checkout 4.5.3
-          mkdir build -Force -ErrorAction Stop | Out-Null
-          cd build
-          cmake  -G Ninja `
-                -D CMAKE_TOOLCHAIN_FILE=${{ github.workspace }}\..\vcpkg\scripts\buildsystems\vcpkg.cmake `
-                -D CMAKE_BUILD_TYPE=Release `
-                -D CMAKE_INSTALL_PREFIX=C:\opencv `
-                -D ENABLE_CXX11=ON `
-                -D BUILD_DOCS=OFF `
-                -D BUILD_EXAMPLES=OFF `
-                -D BUILD_JASPER=OFF `
-                -D BUILD_OPENEXR=OFF `
-                -D BUILD_PERF_TESTS=OFF `
-                -D BUILD_TESTS=OFF `
-                -D WITH_EIGEN=ON `
-                -D WITH_FFMPEG=ON `
-                -D OPENCV_FFMPEG_USE_FIND_PACKAGE=OFF `
-                -D OPENCV_FFMPEG_SKIP_DOWNLOAD=OFF `
-                -D WITH_OPENMP=ON `
-                ..
-          ninja -j2
-          ninja install
+          if (!(Test-Path C:\opencv\OpenCVConfig.cmake)) {
+            cd ..
+            git clone https://github.com/opencv/opencv.git
+            cd opencv 
+            git checkout 4.5.3
+            mkdir build -Force -ErrorAction Stop | Out-Null
+            cd build
+            cmake  -G Ninja `
+                  -D CMAKE_TOOLCHAIN_FILE=${{ github.workspace }}\..\vcpkg\scripts\buildsystems\vcpkg.cmake `
+                  -D CMAKE_BUILD_TYPE=Release `
+                  -D CMAKE_INSTALL_PREFIX=C:\opencv `
+                  -D ENABLE_CXX11=ON `
+                  -D BUILD_DOCS=OFF `
+                  -D BUILD_EXAMPLES=OFF `
+                  -D BUILD_JASPER=OFF `
+                  -D BUILD_OPENEXR=OFF `
+                  -D BUILD_PERF_TESTS=OFF `
+                  -D BUILD_TESTS=OFF `
+                  -D WITH_EIGEN=ON `
+                  -D WITH_FFMPEG=ON `
+                  -D OPENCV_FFMPEG_USE_FIND_PACKAGE=OFF `
+                  -D OPENCV_FFMPEG_SKIP_DOWNLOAD=OFF `
+                  -D WITH_OPENMP=ON `
+                  ..
+            ninja -j2
+            ninja install
+          }
           cd C:\opencv
           dir
       - name: build
