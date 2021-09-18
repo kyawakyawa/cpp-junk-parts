@@ -31,6 +31,7 @@ SOFTWARE.
 #include <fstream>
 #include <iostream>
 
+// NOLINTNEXTLINE
 using namespace std;
 
 const int g_width = 640;

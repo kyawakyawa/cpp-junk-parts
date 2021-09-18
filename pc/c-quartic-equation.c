@@ -157,7 +157,7 @@ static void refine_cubic_equation_solution(const double b, const double c,
   KAHAN_ADD_LAST(denominator, 3.0 * x2);
 
   if (fabs(denominator) >
-      DBL_EPSILON) {  // TODO Use the better way with Ofast option
+      DBL_EPSILON) {  // TODO(kyawakyawa) Use the better way with Ofast option
     *x -= numerator / denominator;
   }
 }
@@ -344,7 +344,7 @@ static void compute_real_solution_of_quartic_equation(
   }
 
   for (size_t i = 0; i < *num_solutions; ++i) {
-    // TODO SIMD
+    // TODO(kyawakyawa) SIMD
     solutions[i] -= b;
   }
 }

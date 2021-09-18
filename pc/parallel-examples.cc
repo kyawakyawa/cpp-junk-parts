@@ -48,13 +48,13 @@ T ParallelReduce(size_t num_threads, InputIterator first, InputIterator last,
   if (num_terms < num_threads) {
     return std::accumulate(first, last, init);
   }
-  const long m = long((num_terms + num_threads - 1) / num_threads);
+  const auto m = int64_t((num_terms + num_threads - 1) / num_threads);
 
   std::vector<std::thread> workers;
   std::vector<T> sums(num_threads);
   for (size_t thread_id = 0; thread_id < num_threads; ++thread_id) {
     workers.emplace_back([&, thread_id](void) {
-      const long offset = long(thread_id) * m;
+      const int64_t offset = int64_t(thread_id) * m;
       if (thread_id == num_threads - 1) {
         sums[thread_id] = std::accumulate(first + offset, last, T(0));
       } else {

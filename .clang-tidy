@@ -20,6 +20,7 @@ Checks: "-*,\
   cppcoreguidelines-slicing, \
   cppcoreguidelines-special-member-functions, \
   cppcoreguidelines-virtual-class-destructor, \
+  google-*, \
   modernize-*, \
   -modernize-use-trailing-return-type, \
   -modernize-redundant-void-arg, \

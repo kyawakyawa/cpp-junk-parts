@@ -63,7 +63,7 @@ void RefineCubicEquationSolution(const T b, const T c, const T d, T* x) {
   KAHAN_ADD_LAST(denominator, T(3) * x2);
 
   if (fabs(denominator) >
-      std::numeric_limits<T>::epsilon()) {  // TODO Use the better way with
+      std::numeric_limits<T>::epsilon()) {  // TODO(kyawakyawa) Use the better way with
                                             // Ofast option
     *x -= numerator / denominator;
   }
@@ -253,7 +253,7 @@ void ComputeRealSolutionOfQuarticEquation(
   }
 
   for (size_t i = 0; i < *num_solutions; ++i) {
-    // TODO SIMD
+    // TODO(kyawakyawa) SIMD
     solutions[i] -= b;
   }
 }
@@ -293,7 +293,7 @@ static bool Test(const double b, const double c, const double d,
 
   const double thr = 1e-12;
 
-  // TODO newton法でエラーチェック
+  // TODO(kyawakyawa) newton法でエラーチェック
 
   for (size_t i = 0; i < num_solutions; ++i) {
     if (std::isfinite(solutions[i]) &&

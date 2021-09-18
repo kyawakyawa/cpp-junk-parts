@@ -24,6 +24,7 @@ SOFTWARE.
 
 #include <assert.h>
 #include <math.h>
+#include <stdint.h>
 
 #include <algorithm>
 #include <chrono>
@@ -147,7 +148,7 @@ static bool Test(const double b, const double c, const double d) {
   return true;
 }
 
-static long Benchmark(const double b, const double c, const double d) {
+static int64_t Benchmark(const double b, const double c, const double d) {
   std::chrono::high_resolution_clock::time_point start;
   std::chrono::high_resolution_clock::time_point end;
 
@@ -158,7 +159,7 @@ static long Benchmark(const double b, const double c, const double d) {
   ComputeRealSolutionOfCubicEquation(b, c, d, solutions, &num_solutions);
   end = std::chrono::high_resolution_clock::now();
 
-  const long com_time =
+  const int64_t com_time =
       std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
 
   return com_time;
@@ -212,7 +213,7 @@ int main(void) {
     }
   }
 
-  long sum_com_time = 0.0;
+  int64_t sum_com_time = 0.0;
   for (size_t itr_cnt = 0; itr_cnt < num_bench_itr; ++itr_cnt) {
     std::uniform_real_distribution<double> dist(-10.0, 10.0);
     const double b = dist(engine);

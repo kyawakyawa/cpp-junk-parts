@@ -24,6 +24,7 @@ SOFTWARE.
 
 #include <assert.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 #include <algorithm>
 #include <iostream>
@@ -49,7 +50,7 @@ static std::vector<int> GenerateRandomVector(const size_t n) {
 }
 
 // get floor((n - 1) / 2)th element
-//  TODO 長さ0の時
+// TODO(kyawakyawa): 長さ0の時
 static int MedianWithSort(const std::vector<int> &input) {
   const size_t n = input.size();
   auto v = input;
@@ -59,7 +60,7 @@ static int MedianWithSort(const std::vector<int> &input) {
 
 enum SelectionMethod { MedianOfMedian, Randomized };
 
-//  TODO 長さ0の時
+// TODO(kyawakyawa): 長さ0の時
 static int MedianWithQuickSelect(
     const std::vector<int> &input,
     SelectionMethod sm = SelectionMethod::Randomized) {
@@ -79,13 +80,13 @@ static int MedianWithQuickSelect(
       // NOLINTNEXTLINE
       pivot_id = size_t(l + (rand() % (r - l)));
     }
-    // TODO 中央値の中央値を実装する // http://www.flint.jp/blog/?entry=109
+    // TODO(kyawakyawa): 中央値の中央値を実装する // http://www.flint.jp/blog/?entry=109
 
     // ピボットを先頭に退避
     const int pivot = v[pivot_id];
     std::swap(v[size_t(l)], v[pivot_id]);
 
-    const long c =
+    const int64_t c =
         (std::partition(v.begin() + l + 1, v.begin() + r,
                         [&pivot](const int x) { return x < pivot; }) -
          v.begin()) -
@@ -111,7 +112,7 @@ static int NthElement(const std::vector<int> &input) {
   auto v = input;
   const size_t n = v.size();
   const size_t m_id = (n - 1) / 2;
-  std::nth_element(v.begin(), v.begin() + long(m_id), v.end());
+  std::nth_element(v.begin(), v.begin() + int64_t(m_id), v.end());
   return v[m_id];
 }
 

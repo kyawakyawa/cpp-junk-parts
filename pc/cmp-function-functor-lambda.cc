@@ -32,6 +32,7 @@ SOFTWARE.
 #include <utility>
 #include <vector>
 
+// NOLINTNEXTLINE
 using namespace std;
 
 static bool cmp_function(double dummy, double x, double y) {
