@@ -21,6 +21,7 @@ Checks: "-*,\
   cppcoreguidelines-special-member-functions, \
   cppcoreguidelines-virtual-class-destructor, \
   google-*, \
+  llvm-*, \
   modernize-*, \
   -modernize-use-trailing-return-type, \
   -modernize-redundant-void-arg, \

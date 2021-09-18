@@ -23,8 +23,8 @@ SOFTWARE.
 */
 
 #include <assert.h>
-#include <stdlib.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #include <algorithm>
 #include <iostream>
@@ -80,7 +80,8 @@ static int MedianWithQuickSelect(
       // NOLINTNEXTLINE
       pivot_id = size_t(l + (rand() % (r - l)));
     }
-    // TODO(kyawakyawa): 中央値の中央値を実装する // http://www.flint.jp/blog/?entry=109
+    // TODO(kyawakyawa): 中央値の中央値を実装する //
+    // http://www.flint.jp/blog/?entry=109
 
     // ピボットを先頭に退避
     const int pivot = v[pivot_id];

@@ -63,8 +63,8 @@ void RefineCubicEquationSolution(const T b, const T c, const T d, T* x) {
   KAHAN_ADD_LAST(denominator, T(3) * x2);
 
   if (fabs(denominator) >
-      std::numeric_limits<T>::epsilon()) {  // TODO(kyawakyawa) Use the better way with
-                                            // Ofast option
+      std::numeric_limits<T>::epsilon()) {  // TODO(kyawakyawa) Use the better
+                                            // way with Ofast option
     *x -= numerator / denominator;
   }
 }
