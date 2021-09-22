@@ -1,9 +1,9 @@
 name: build-and-test
-on: 
+on:
   push:
   pull_request:
   schedule:
-    - cron: '0 2 * * 1,5'
+    - cron: "0 2 * * 1,5" # 月曜日と金曜日の02:00(UTC)に実行(JSTだと11:00)
 jobs:
   build-and-test-on-linux:
     runs-on: ubuntu-20.04
