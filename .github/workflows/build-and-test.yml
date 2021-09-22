@@ -1,5 +1,9 @@
 name: build-and-test
-on: [push]
+on: 
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 2 * * 1,5'
 jobs:
   build-and-test-on-linux:
     runs-on: ubuntu-20.04
